@@ -1,0 +1,9 @@
+{
+  "level_id": 1,
+  "name": "Level 1",
+  "objects": [
+    { "id": "1", "type": "red_box", "x": 2, "y": 2 },
+    { "id": "2", "type": "orange_box", "x": 10, "y": 3 },
+    { "id": "3", "type": "orange_box", "x": 16, "y": 5 }
+  ]
+}
