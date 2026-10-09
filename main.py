@@ -25,14 +25,14 @@ CANVAS_WIDTH = GRID_COLS * CELL_WIDTH   # 72 terminal characters
 CANVAS_HEIGHT = GRID_ROWS * CELL_HEIGHT # 21 terminal lines
 
 COLOR_MAP = {
-    "orange": curses.COLOR_YELLOW,
     "yellow": curses.COLOR_YELLOW,
     "red": curses.COLOR_RED,
     "green": curses.COLOR_GREEN,
     "blue": curses.COLOR_BLUE,
     "cyan": curses.COLOR_CYAN,
     "magenta": curses.COLOR_MAGENTA,
-    "white": curses.COLOR_WHITE
+    "white": curses.COLOR_WHITE,
+    "black": curses.COLOR_BLACK
 }
 
 
@@ -146,19 +146,19 @@ def ensure_sample_assets_exist(objects_dir: Path, level_file: Path):
     objects_dir.mkdir(parents=True, exist_ok=True)
     level_file.parent.mkdir(parents=True, exist_ok=True)
 
-    orange_box_path = objects_dir / "orange_box.json"
-    if not orange_box_path.exists():
-        orange_box_data = {
-            "type_id": "orange_box",
-            "name": "Orange Box",
+    yellow_box_path = objects_dir / "yellow_box.json"
+    if not yellow_box_path.exists():
+        yellow_box_data = {
+            "type_id": "yellow_box",
+            "name": "Yellow Box",
             "design": {
-                "1": "orange", "2": "orange", "3": "orange",
-                "4": "orange", "5": "id",     "6": "orange",
-                "7": "orange", "8": "orange", "9": "orange"
+                "1": "yellow", "2": "yellow", "3": "yellow",
+                "4": "yellow", "5": "id",     "6": "yellow",
+                "7": "yellow", "8": "yellow", "9": "yellow"
             }
         }
-        with open(orange_box_path, 'w', encoding='utf-8') as f:
-            json.dump(orange_box_data, f, indent=2)
+        with open(yellow_box_path, 'w', encoding='utf-8') as f:
+            json.dump(yellow_box_data, f, indent=2)
 
     red_box_path = objects_dir / "red_box.json"
     if not red_box_path.exists():
