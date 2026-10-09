@@ -325,5 +325,3 @@ def main(stdscr):
 
 if __name__ == "__main__":
     curses.wrapper(main)
-
-# 아 ㅈㄴ 배고프다 아침 뭐먹지 하씨.... 토요일 아침 금요일 새벽
