@@ -1,6 +1,7 @@
 {
   "type_id": "yellow_box",
-  "name": "yellow Box",
+  "name": "Yellow Box",
+  "is_movable": true,
   "design": {
     "1": "yellow",
     "2": "yellow",

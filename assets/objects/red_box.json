@@ -1,12 +1,13 @@
 {
   "type_id": "red_box",
   "name": "Red Box",
+  "is_movable": true,
   "design": {
     "1": "red",
     "2": "red",
     "3": "red",
     "4": "red",
-    "5": "",
+    "5": "red",
     "6": "red",
     "7": "red",
     "8": "red",

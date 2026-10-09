@@ -9,6 +9,13 @@ from pathlib import Path
 # 3. Separate files for constants, assets, and main game logic
 # 4. Add Mirrors and Gun objects and Target.
 
+# FEATURES
+# Every object has is_fragile tag
+# Every object has is_movable tag
+# Every object has color tag
+# Every object has a type tag
+# Every object has a zone tag, that object can only move in specific zone
+
 
 
 # Grid and Aspect Ratio Configuration, will be moved to constants.py
@@ -118,6 +125,12 @@ class GameEngine:
             self.status_msg = "No object selected!"
             return
 
+        # if the selected object is not movable, block the move... but it moves!
+        # please someone fix this.
+        if not self.objects[self.selected_id].object_type.design:
+            self.status_msg = f"[BLOCKED] Object [{self.selected_id}] is not movable"
+            return
+
         target = self.objects[self.selected_id]
         new_x = target.grid_x + dx
         new_y = target.grid_y + dy
@@ -173,6 +186,20 @@ def ensure_sample_assets_exist(objects_dir: Path, level_file: Path):
         }
         with open(red_box_path, 'w', encoding='utf-8') as f:
             json.dump(red_box_data, f, indent=2)
+
+    green_box_path = objects_dir / "green_box.json"
+    if not green_box_path.exists():
+        green_box_data = {
+            "type_id": "box",
+            "name": "Green Box",
+            "design": {
+                "1": "green", "2": "green", "3": "green",
+                "4": "green", "5": "id",  "6": "green",
+                "7": "green", "8": "green", "9": "green"
+            }
+        }
+        with open(green_box_path, 'w', encoding='utf-8') as f:
+            json.dump(green_box_data, f, indent=2)
 
     if not level_file.exists():
         level_data = {
