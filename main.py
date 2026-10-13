@@ -1,17 +1,18 @@
 import curses
 import json
 from pathlib import Path
-
+from curses.textpad import rectangle
+from dataclasses import dataclass
 
 # TO-DO:
-# 1. Somehow make the boxes' json file fucking load
+# 1. Somehow make the boxes' json file fucking load (done)
 # 2. Shooting Mechanisms
 # 3. Separate files for constants, assets, and main game logic
 # 4. Add Mirrors and Gun objects and Target.
 
 # FEATURES
-# Every object has is_fragile tag
-# Every object has is_movable tag
+# Every object has is_fragile tag   
+# Every object has is_movable tag   
 # Every object has color tag
 # Every object has a type tag
 # Every object has a zone tag, that object can only move in specific zone
@@ -43,35 +44,39 @@ COLOR_MAP = {
 }
 
 
+@dataclass #use dataclass library to simpify class init
 class ObjectType:
     """Represents a 3x3 object design template loaded from assets/objects/*.json"""
-    def __init__(self, type_id, name, design):
-        self.type_id = type_id
-        self.name = name
-        self.design = design  # Dict with keys "1" through "9". 0 is not used for now
+    type_id: int  # type_id of object
+    name: str
+    design: dict  # Dict with keys "1" through "9". 0 is not used for now
+    is_movable: bool
+    is_fragile: bool
 
     @classmethod
     def load_from_file(cls, filepath):
-        with open(filepath, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-        
+        data=json.loads(filepath.read_text(encoding="utf-8"))
+
         type_id = data.get("type_id", Path(filepath).stem)
         name = data.get("name", type_id)
         design = data.get("design", {})
-        return cls(type_id, name, design)
+        is_movable=data.get("is_movable",False)
+        is_fragile=data.get("is_fragile",False)
+        return cls(type_id, name, design,is_movable,is_fragile)
 
-
+@dataclass
 class GameObjectInstance:
     """Represent active object on the grid."""
-    def __init__(self, instance_id, object_type, grid_x, grid_y):
-        self.instance_id = str(instance_id)  # Selection ID (like '1', '2')
-        self.object_type = object_type        # ObjectType reference
-        self.grid_x = grid_x                  # Grid X (0..11)
-        self.grid_y = grid_y                  # Grid Y (0..6)
+    instance_id: str    # Selection ID (like '1', '2')
+    object_type: str    # ObjectType reference
+    grid_x: int # Grid X (0..11)
+    grid_y: int # Grid Y (0..6)
+
 
 
 class GameEngine:
     """For checking collisions, movings, and managing game state."""
+
     def __init__(self):
         self.object_types = {}    # type_id -> ObjectType
         self.objects = {}         # instance_id -> GameObjectInstance
@@ -90,12 +95,22 @@ class GameEngine:
             except Exception as e:
                 print(f"Error loading object template {json_file}: {e}")
 
+
+
         # Load Level Data (for now only level 1, for some reason I failed to do any more levels, why??)
         if not level_file.exists():
             raise FileNotFoundError(f"Level file not found at {level_file}")
 
-        with open(level_file, 'r', encoding='utf-8') as f:
-            level_data = json.load(f)
+        '''
+        I rewrite the file extraction to a single line to make it clear:
+            with open(level_file, 'r', encoding='utf-8') as f:
+        level_data = json.load(f)
+        
+        Ether
+        '''
+        level_data = json.loads(level_file.read_text(encoding="utf-8"))
+
+
 
         for item in level_data.get("objects", []):
             instance_id = str(item["id"])
@@ -124,22 +139,34 @@ class GameEngine:
         if not self.selected_id or self.selected_id not in self.objects:
             self.status_msg = "No object selected!"
             return
-
+        
         # if the selected object is not movable, block the move... but it moves!
         # please someone fix this.
-        if not self.objects[self.selected_id].object_type.design:
-            self.status_msg = f"[BLOCKED] Object [{self.selected_id}] is not movable"
-            return
-
-        target = self.objects[self.selected_id]
+        
+        target=self.objects[self.selected_id]
         new_x = target.grid_x + dx
         new_y = target.grid_y + dy
 
-        # Object-to-Boundary Collision Check (12x7 Grid)
-        if not (0 <= new_x < GRID_COLS and 0 <= new_y < GRID_ROWS):
-            self.status_msg = f"[BLOCKED] Hit grid boundary at ({new_x}, {new_y})"
+
+        if not target.object_type.is_movable:
+            self.status_msg = f"[BLOCKED] Object [{self.selected_id}] is not movable"
             return
 
+
+
+        # Object-to-Boundary Collision Check (12x7 Grid)
+        
+        if target.object_type.type_id != "gun":
+            if not (0< new_x < GRID_COLS-1 and 0< new_y < GRID_ROWS-1):
+                self.status_msg = f"[BLOCKED] Hit grid boundary at ({new_x}, {new_y})"
+                return
+        else:#gun can only move in the outer ring
+            if (0< new_x < GRID_COLS-1 and 0< new_y < GRID_ROWS-1) or \
+                (new_x<0 or new_x>GRID_COLS-1 or new_y<0 or new_y>GRID_ROWS-1 ):
+                self.status_msg = f"[BLOCKED] Hit grid boundary at ({new_x}, {new_y})"
+                return
+
+        
         # Object-to-Object Collision Check
         for other_id, other_obj in self.objects.items():
             if other_id != self.selected_id:
@@ -151,9 +178,17 @@ class GameEngine:
         target.grid_x = new_x
         target.grid_y = new_y
         self.status_msg = f"Moved Object [{self.selected_id}] to Grid ({new_x}, {new_y})"
+    
+    def try_rotate(self,degree):
+        if degree==90:
+            self.status_msg = f"Rotated Object [{self.selected_id}]"
+            return
+            
 
 
+'''
 # This is so simple why the fuck does it not work??????
+# it seems working now
 def ensure_sample_assets_exist(objects_dir: Path, level_file: Path):
     """Generates default asset directory and JSON files if they do not exist."""
     objects_dir.mkdir(parents=True, exist_ok=True)
@@ -188,6 +223,9 @@ def ensure_sample_assets_exist(objects_dir: Path, level_file: Path):
             json.dump(red_box_data, f, indent=2)
 
     green_box_path = objects_dir / "green_box.json"
+
+
+
     if not green_box_path.exists():
         green_box_data = {
             "type_id": "box",
@@ -214,6 +252,7 @@ def ensure_sample_assets_exist(objects_dir: Path, level_file: Path):
         with open(level_file, 'w', encoding='utf-8') as f:
             json.dump(level_data, f, indent=2)
 
+'''
 
 def init_colors():
     curses.start_color()
@@ -262,12 +301,16 @@ def main(stdscr):
             stdscr.refresh()
             key = stdscr.getch()
             if key in (ord('q'), ord('Q'), 27):
-                break
+                exit()
             continue
 
         offset_y = 2
         offset_x = 2
 
+
+        rectangle(stdscr, 1, 0, 23, 75)
+
+        '''
         # Draw Canvas Outer Border, could use curses.box() or curses.rectangle() but that didn't work
         for y in range(CANVAS_HEIGHT + 2):
             for x in range(CANVAS_WIDTH + 2):
@@ -276,6 +319,8 @@ def main(stdscr):
                         stdscr.addch(offset_y + y - 1, offset_x + x - 1, '█', curses.color_pair(1))
                     except curses.error:
                         pass
+
+        '''
 
         # Render Object Instances
         for inst_id, obj in engine.objects.items():
@@ -287,27 +332,27 @@ def main(stdscr):
             attr = curses.A_BOLD if is_selected else curses.A_NORMAL
 
             # Draw 3x3 layout
-            for pos in range(1, 10):
-                sub_r = (pos - 1) // 3
-                sub_c = (pos - 1) % 3
+            for pos in range(1, 19): #3 rows and 6 columns make a block, 18 characters in total
+                sub_r = (pos - 1) // 6
+                sub_c = (pos - 1) % 6
 
-                # Center position (5) dynamically displays the instance ID
-                if pos == 5:
+                # Center position (9) dynamically displays the instance ID
+                if pos == 10:
                     val = inst_id
+                elif pos==9:
+                    val=" "
                 else:
-                    val = str(design.get(str(pos), " "))
+                    val = design.get(str(pos), " ")[0]   #get the color of the character,val is string
+                    
 
                 screen_y = base_screen_y + sub_r
-                screen_x = base_screen_x + (sub_c * 2)  # Step by 2 horizontal chars
+                screen_x = base_screen_x + sub_c  
 
                 if val in color_pairs:
-                    str_to_draw = '██'
+                    str_to_draw = design.get(str(pos), " ")[1] #get the string to draw
                     color_attr = color_pairs[val] | attr
                 else:
-                    if len(val) == 1:
-                        str_to_draw = f" {val}"
-                    else:
-                        str_to_draw = val[:2].ljust(2)
+                    str_to_draw = f"{val}"
                     color_attr = curses.color_pair(1) | attr
 
                 try:
@@ -339,6 +384,8 @@ def main(stdscr):
             engine.try_move(-1, 0)
         elif key in (ord('d'), ord('D'), curses.KEY_RIGHT):
             engine.try_move(1, 0)
+        elif key in (ord('r'), ord('R')):
+            engine.try_rotate(90)
         else:
             # Check key press for object selection.....
             try:

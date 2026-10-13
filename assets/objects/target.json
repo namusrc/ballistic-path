@@ -1,0 +1,28 @@
+{
+  "type_id": "target",
+  "name": "target",
+  "is_movable": false,
+  "is_fragile":true,
+  "design": {
+    "1":["white","◜"] ,
+    "2": ["white","╭"],
+    "3": ["white","─"],
+    "4": ["white","─"],
+    "5": ["white","╮"],
+    "6": ["white","◝"],
+    
+    "7": ["white","⎸"],
+    "8": ["white","│"],
+    "9": ["white","◖"],
+    "10": ["white","◗"],
+    "11": ["white","│"],
+    "12": ["white","⎹"],
+
+    "13": ["white","◟"],
+    "14": ["white","╰"],
+    "15": ["white","─"],
+    "16": ["white","─"],
+    "17": ["white","╯"],
+    "18": ["white","◞"]
+  }
+}
