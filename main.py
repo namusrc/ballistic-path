@@ -6,9 +6,10 @@ from dataclasses import dataclass
 
 # TO-DO:
 # 1. Somehow make the boxes' json file fucking load (done)
-# 2. Shooting Mechanisms
+# 2. Add Shooting Mechanisms - Ethan
 # 3. Separate files for constants, assets, and main game logic
-# 4. Add Mirrors and Gun objects and Target.
+# 4. Add Mirrors and Gun objects and Target. (done)
+# 5. Add rotation for mirrors and gun - Chen
 
 # FEATURES
 # Every object has is_fragile tag   
@@ -97,17 +98,10 @@ class GameEngine:
 
 
 
-        # Load Level Data (for now only level 1, for some reason I failed to do any more levels, why??)
+        # Load Level Data
         if not level_file.exists():
             raise FileNotFoundError(f"Level file not found at {level_file}")
-
-        '''
-        I rewrite the file extraction to a single line to make it clear:
-            with open(level_file, 'r', encoding='utf-8') as f:
-        level_data = json.load(f)
         
-        Ether
-        '''
         level_data = json.loads(level_file.read_text(encoding="utf-8"))
 
 
@@ -139,9 +133,6 @@ class GameEngine:
         if not self.selected_id or self.selected_id not in self.objects:
             self.status_msg = "No object selected!"
             return
-        
-        # if the selected object is not movable, block the move... but it moves!
-        # please someone fix this.
         
         target=self.objects[self.selected_id]
         new_x = target.grid_x + dx
@@ -336,11 +327,11 @@ def main(stdscr):
                 sub_r = (pos - 1) // 6
                 sub_c = (pos - 1) % 6
 
-                # Center position (9) dynamically displays the instance ID
+                # Center position (10) dynamically displays the instance ID
                 if pos == 10:
                     val = inst_id
-                elif pos==9:
-                    val=" "
+                elif pos == 9:
+                    val = " "
                 else:
                     val = design.get(str(pos), " ")[0]   #get the color of the character,val is string
                     
