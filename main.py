@@ -5,7 +5,7 @@ from curses.textpad import rectangle
 from dataclasses import dataclass
 
 # TO-DO:
-# 1. Somehow make the boxes' json file fucking load (done)
+# 1. Make the boxes' json file load (done)
 # 2. Add Shooting Mechanisms - Ethan
 # 3. Separate files for constants, assets, and main game logic
 # 4. Add Mirrors and Gun objects and Target. (done)
@@ -17,8 +17,6 @@ from dataclasses import dataclass
 # Every object has color tag
 # Every object has a type tag
 # Every object has a zone tag, that object can only move in specific zone
-
-
 
 # Grid and Aspect Ratio Configuration, will be moved to constants.py
 # 12 horizontally and 7 vertically
@@ -45,7 +43,7 @@ COLOR_MAP = {
 }
 
 
-@dataclass #use dataclass library to simpify class init
+@dataclass # Use dataclass library to simpify class init
 class ObjectType:
     """Represents a 3x3 object design template loaded from assets/objects/*.json"""
     type_id: int  # type_id of object
@@ -65,7 +63,7 @@ class ObjectType:
         #name = data.get("name", type_id)
         name = data.get("name", None )
         design = data.get("design", {})
-        designs = data.get("designs", {})#specially for rotatable objects
+        designs = data.get("designs", {}) # specially for rotatable objects
         is_movable=data.get("is_movable",False)
         is_fragile=data.get("is_fragile",False)
         return cls(type_id, degree_a, name, design, designs,is_movable,is_fragile)
@@ -159,16 +157,16 @@ class GameEngine:
                 self.status_msg = f"[BLOCKED] Hit grid boundary at ({new_x}, {new_y})"
                 return
         else:#gun can only move in the outer ring
-            if new_x==0:
-                target.direction=180
-            if new_y==6:
-                target.direction=90
-            if new_x==11:
-                target.direction=360
-            if new_y==0:
-                target.direction=270
-            if (0< new_x < GRID_COLS-1 and 0< new_y < GRID_ROWS-1) or \
-                (new_x<0 or new_x>GRID_COLS-1 or new_y<0 or new_y>GRID_ROWS-1 ):
+            if new_x == 0:
+                target.direction = 180
+            if new_y == 6:
+                target.direction = 90
+            if new_x == 11:
+                target.direction = 360
+            if new_y == 0:
+                target.direction =270
+            if (0 < new_x < GRID_COLS-1 and 0 < new_y < GRID_ROWS-1) or \
+                (new_x < 0 or new_x > GRID_COLS-1 or new_y < 0 or new_y > GRID_ROWS-1):
                 self.status_msg = f"[BLOCKED] Hit grid boundary at ({new_x}, {new_y})"             
                 return
 
@@ -185,94 +183,20 @@ class GameEngine:
         target.grid_y = new_y
         self.status_msg = f"Moved Object [{self.selected_id}] to Grid ({new_x}, {new_y})"
     
-    def try_rotate(self,degree):
+    def try_rotate(self, degree):
         obj=self.objects[self.selected_id]
-        if obj.object_type.type_id=='mirror':
-            if obj.direction==45:
+        if obj.object_type.type_id == 'mirror':
+            if obj.direction == 45:
                 self.status_msg = f"Rotated Object [{self.selected_id}]"
-                obj.direction=135
-                
+                obj.direction = 135
 
-                
-
-
-            elif obj.direction==135:
+            elif obj.direction == 135:
                 self.status_msg = f"Rotated Object [{self.selected_id}]"
-                obj.direction=45
+                obj.direction = 45
         else:
             self.status_msg = f"(?) it is meaningless to rotate [{obj.object_type.type_id}]"
         return
             
-
-
-'''
-# This is so simple why the fuck does it not work??????
-# it seems working now
-def ensure_sample_assets_exist(objects_dir: Path, level_file: Path):
-    """Generates default asset directory and JSON files if they do not exist."""
-    objects_dir.mkdir(parents=True, exist_ok=True)
-    level_file.parent.mkdir(parents=True, exist_ok=True)
-
-    yellow_box_path = objects_dir / "yellow_box.json"
-    if not yellow_box_path.exists():
-        yellow_box_data = {
-            "type_id": "yellow_box",
-            "name": "Yellow Box",
-            "design": {
-                "1": "yellow", "2": "yellow", "3": "yellow",
-                "4": "yellow", "5": "id",     "6": "yellow",
-                "7": "yellow", "8": "yellow", "9": "yellow"
-            }
-        }
-        with open(yellow_box_path, 'w', encoding='utf-8') as f:
-            json.dump(yellow_box_data, f, indent=2)
-
-    red_box_path = objects_dir / "red_box.json"
-    if not red_box_path.exists():
-        red_box_data = {
-            "type_id": "box",
-            "name": "Red Box",
-            "design": {
-                "1": "red", "2": "red", "3": "red",
-                "4": "red", "5": "id",  "6": "red",
-                "7": "red", "8": "red", "9": "red"
-            }
-        }
-        with open(red_box_path, 'w', encoding='utf-8') as f:
-            json.dump(red_box_data, f, indent=2)
-
-    green_box_path = objects_dir / "green_box.json"
-
-
-
-    if not green_box_path.exists():
-        green_box_data = {
-            "type_id": "box",
-            "name": "Green Box",
-            "design": {
-                "1": "green", "2": "green", "3": "green",
-                "4": "green", "5": "id",  "6": "green",
-                "7": "green", "8": "green", "9": "green"
-            }
-        }
-        with open(green_box_path, 'w', encoding='utf-8') as f:
-            json.dump(green_box_data, f, indent=2)
-
-    if not level_file.exists():
-        level_data = {
-            "level_id": 1,
-            "name": "Level 1",
-            "objects": [
-                {"id": "1", "type": "box", "x": 2, "y": 2},
-                {"id": "2", "type": "donut", "x": 10, "y": 3},
-                {"id": "3", "type": "donut", "x": 16, "y": 5}
-            ]
-        }
-        with open(level_file, 'w', encoding='utf-8') as f:
-            json.dump(level_data, f, indent=2)
-
-'''
-
 def init_colors():
     curses.start_color()
     curses.use_default_colors()
