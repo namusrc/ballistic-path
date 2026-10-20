@@ -2,11 +2,28 @@
   "level_id": 1,
   "name": "Level 1",
   "objects": [
-    { "id": "1", "type": "red_box", "x": 2, "y": 2 },
-    { "id": "2", "type": "yellow_box", "x": 10, "y": 3 },
-    { "id": "3", "type": "yellow_box", "x": 4, "y": 5 },
-    { "id": "4", "type": "gun", "x": 0, "y": 0 },
-    { "id": "5", "type": "target", "x": 1, "y": 1 },
-    { "id": "6", "type": "mirror", "x": 5, "y": 5 }
+    { "id": "1", "type": "gun", "initial_angle": "south", "x": 6, "y": 0 },
+    { "id": "2", "type": "yellow_box", "x": 2, "y": 5 },
+    { "id": "3", "type": "yellow_box", "x": 3, "y": 5 },
+    { "id": "4", "type": "mirror", "x": 6, "y": 5 },
+    
+    { "id": "10", "type": "fixed_mirror", "initial_angle": "east", "x": 2, "y": 3 },
+    { "id": "11", "type": "red_box", "x": 1, "y": 3 },
+    { "id": "12", "type": "red_box", "x": 1, "y": 4 },
+    { "id": "13", "type": "red_box", "x": 1, "y": 5 },
+    { "id": "14", "type": "red_box", "x": 4, "y": 6 },
+    { "id": "15", "type": "red_box", "x": 2, "y": 2 },
+    { "id": "16", "type": "red_box", "x": 4, "y": 1 },
+    { "id": "17", "type": "red_box", "x": 5, "y": 1 },
+    { "id": "18", "type": "red_box", "x": 6, "y": 1 },
+    { "id": "19", "type": "red_box", "x": 7, "y": 1 },
+    { "id": "20", "type": "red_box", "x": 8, "y": 1 },
+    { "id": "21", "type": "red_box", "x": 9, "y": 1 },
+    { "id": "22", "type": "red_box", "x": 10, "y": 1 },
+    { "id": "23", "type": "red_box", "x": 11, "y": 1 },
+    { "id": "24", "type": "red_box", "x": 7, "y": 2 },
+
+    
+    { "id": "99", "type": "target", "x": 9, "y": 2 }
   ]
 }

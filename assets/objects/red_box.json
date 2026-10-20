@@ -1,8 +1,8 @@
 {
   "type_id": "red_box",
   "name": "Red Box",
-  "is_movable": true,
-  "is_fragile": true,
+  "is_movable": false,
+  "is_fragile": false,
   "design": {
     "1": ["red","█"],
     "2": ["red","█"],

@@ -78,7 +78,7 @@ class GameObjectInstance:
     object_type: str    # ObjectType reference
     grid_x: int # Grid X (0..11)
     grid_y: int # Grid Y (0..6)
-    angle: str = "north"
+    angle: str
 
 
 
@@ -121,7 +121,7 @@ class GameEngine:
             if type_id in self.object_types:
                 obj_type = self.object_types[type_id]
 
-                angle = item.get("angle", obj_type.initial_angle)
+                angle = item.get("initial_angle", obj_type.initial_angle)
                 if not angle or angle == "random":
                     angle = random.choice(["north", "east", "south", "west"])  # Random angle for rotatable objects
 
@@ -155,24 +155,29 @@ class GameEngine:
 
 
         # Object-to-Boundary Collision Check (12x7 Grid)
-        
-        if selected_object.object_type.type_id != "gun":
-            if not (0< new_x < GRID_COLS-1 and 0< new_y < GRID_ROWS-1):
-                self.status_msg = f"[BLOCKED] Hit grid boundary at ({new_x}, {new_y})"
-                return
-        else:#gun can only move in the outer ring
-            if new_x == 0:
-                selected_object.angle = 180
-            if new_y == 6:
-                selected_object.angle = 90
-            if new_x == 11:
-                selected_object.angle = 360
-            if new_y == 0:
-                selected_object.angle = 270
+        if selected_object.object_type.type_id == "gun":
             if (0 < new_x < GRID_COLS-1 and 0 < new_y < GRID_ROWS-1) or \
                 (new_x < 0 or new_x > GRID_COLS-1 or new_y < 0 or new_y > GRID_ROWS-1):
-                self.status_msg = f"[BLOCKED] Hit grid boundary at ({new_x}, {new_y})"             
+                self.status_msg = f"[BLOCKED] Hit grid boundary at ({new_x}, {new_y})"
                 return
+            
+        elif selected_object.object_type.type_id != "gun":
+            if (new_x < 0 or new_x > GRID_COLS-1 or new_y < 0 or new_y > GRID_ROWS-1):
+                self.status_msg = f"[BLOCKED] Hit grid boundary at ({new_x}, {new_y})"
+                return
+
+        # Let's make the gun rotatable.
+        """
+        else: # gun can only move in the outer ring
+            if new_x == 0:
+                selected_object.angle = "south"
+            if new_y == 6:
+                selected_object.angle = "east"
+            if new_x == 11:
+                selected_object.angle = "west"
+            if new_y == 0:
+                selected_object.angle = "north"
+        """
 
         
         # Object-to-Object Collision Check
@@ -270,17 +275,17 @@ def main(stdscr):
             else :
                 design = obj.object_type.design
             is_selected = (inst_id == engine.selected_id)
-            attr = curses.A_BOLD if is_selected else curses.A_NORMAL
+            attr = curses.A_BOLD if is_selected else curses.A_DIM
 
-            # Draw 3x3 layout
+            # Draw 6x3 layout
             for pos in range(1, 19): #3 rows and 6 columns make a block, 18 characters in total
                 sub_r = (pos - 1) // 6
                 sub_c = (pos - 1) % 6
 
                 # Center position (10) dynamically displays the instance ID
-                if pos == 10:
+                if pos == 10 and obj.object_type.is_movable:
                     val = inst_id
-                elif pos == 9:
+                elif pos == 9 and obj.object_type.is_movable:
                     val = " "
                 else:
                     val = design.get(str(pos), " ")[0]   #get the color of the character, val is string

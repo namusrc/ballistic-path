@@ -2,7 +2,7 @@
   "type_id": "yellow_box",
   "name": "Yellow Box",
   "is_movable": true,
-  "is_fragile": true,
+  "is_fragile": false,
   "design": {
     "1": ["yellow","█"],
     "2": ["yellow","█"],
