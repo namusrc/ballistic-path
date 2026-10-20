@@ -2,9 +2,9 @@
   "type_id": "target",
   "name": "target",
   "is_movable": false,
-  "is_fragile":true,
+  "is_fragile": true,
   "design": {
-    "1":["white","◜"] ,
+    "1": ["white","◜"],
     "2": ["white","╭"],
     "3": ["white","─"],
     "4": ["white","─"],

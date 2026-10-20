@@ -50,7 +50,7 @@ COLOR_MAP = {
 class ObjectType:
     """Represents a 3x3 object design template loaded from assets/objects/*.json"""
     type_id: int  # type_id of object
-    degree_a: int
+    initial_angle: int
     name: str
     design: dict
     designs: dict  # Dict with keys "1" through "9". 0 is not used for now
@@ -59,17 +59,16 @@ class ObjectType:
 
     @classmethod
     def load_from_file(cls, filepath):
-        data=json.loads(filepath.read_text(encoding="utf-8"))
+        data = json.loads(filepath.read_text(encoding="utf-8"))
 
         type_id = data.get("type_id", Path(filepath).stem)
-        degree_a = data.get("degree_a", 45)
-        #name = data.get("name", type_id)
+        initial_angle = data.get("initial_angle", 45)
         name = data.get("name", None )
         design = data.get("design", {})
         designs = data.get("designs", {}) # specially for rotatable objects
-        is_movable=data.get("is_movable",False)
-        is_fragile=data.get("is_fragile",False)
-        return cls(type_id, degree_a, name, design, designs,is_movable,is_fragile)
+        is_movable = data.get("is_movable", False)
+        is_fragile = data.get("is_fragile", False)
+        return cls(type_id, initial_angle, name, design, designs, is_movable, is_fragile)
 
 @dataclass
 class GameObjectInstance:
@@ -78,7 +77,7 @@ class GameObjectInstance:
     object_type: str    # ObjectType reference
     grid_x: int # Grid X (0..11)
     grid_y: int # Grid Y (0..6)
-    direction: int=45
+    direction: int = 45
 
 
 
@@ -121,11 +120,11 @@ class GameEngine:
 
             if type_id in self.object_types:
                 obj_instance = GameObjectInstance(
-                    instance_id=instance_id,
-                    object_type=self.object_types[type_id],
-                    grid_x=grid_x,
-                    grid_y=grid_y,
-                    direction=self.object_types[type_id].degree_a
+                    instance_id = instance_id,
+                    object_type = self.object_types[type_id],
+                    grid_x = grid_x,
+                    grid_y = grid_y,
+                    direction = self.object_types[type_id].initial_angle
                 )
                 self.objects[instance_id] = obj_instance
 
