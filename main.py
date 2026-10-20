@@ -4,6 +4,9 @@ from pathlib import Path
 from curses.textpad import rectangle
 from dataclasses import dataclass
 
+# IMPORTANT. WATCH.
+# https://www.youtube.com/watch?v=dQw4w9WgXcQ
+
 # TO-DO:
 # 1. Make the boxes' json file load (done)
 # 2. Add Shooting Mechanisms - Ethan
