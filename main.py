@@ -77,7 +77,7 @@ class GameObjectInstance:
     object_type: str    # ObjectType reference
     grid_x: int # Grid X (0..11)
     grid_y: int # Grid Y (0..6)
-    direction: int = 45
+    angle: int = 45
 
 
 
@@ -124,7 +124,7 @@ class GameEngine:
                     object_type = self.object_types[type_id],
                     grid_x = grid_x,
                     grid_y = grid_y,
-                    direction = self.object_types[type_id].initial_angle
+                    angle = self.object_types[type_id].initial_angle
                 )
                 self.objects[instance_id] = obj_instance
 
@@ -141,12 +141,12 @@ class GameEngine:
             self.status_msg = "No object selected!"
             return
         
-        target=self.objects[self.selected_id]
-        new_x = target.grid_x + dx
-        new_y = target.grid_y + dy
+        selected_object = self.objects[self.selected_id]
+        new_x = selected_object.grid_x + dx
+        new_y = selected_object.grid_y + dy
 
 
-        if not target.object_type.is_movable:
+        if not selected_object.object_type.is_movable:
             self.status_msg = f"[BLOCKED] Object [{self.selected_id}] is not movable"
             return
 
@@ -154,19 +154,19 @@ class GameEngine:
 
         # Object-to-Boundary Collision Check (12x7 Grid)
         
-        if target.object_type.type_id != "gun":
+        if selected_object.object_type.type_id != "gun":
             if not (0< new_x < GRID_COLS-1 and 0< new_y < GRID_ROWS-1):
                 self.status_msg = f"[BLOCKED] Hit grid boundary at ({new_x}, {new_y})"
                 return
         else:#gun can only move in the outer ring
             if new_x == 0:
-                target.direction = 180
+                selected_object.angle = 180
             if new_y == 6:
-                target.direction = 90
+                selected_object.angle = 90
             if new_x == 11:
-                target.direction = 360
+                selected_object.angle = 360
             if new_y == 0:
-                target.direction =270
+                selected_object.angle = 270
             if (0 < new_x < GRID_COLS-1 and 0 < new_y < GRID_ROWS-1) or \
                 (new_x < 0 or new_x > GRID_COLS-1 or new_y < 0 or new_y > GRID_ROWS-1):
                 self.status_msg = f"[BLOCKED] Hit grid boundary at ({new_x}, {new_y})"             
@@ -181,22 +181,22 @@ class GameEngine:
                     return
 
         # Horray Move accepted
-        target.grid_x = new_x
-        target.grid_y = new_y
+        selected_object.grid_x = new_x
+        selected_object.grid_y = new_y
         self.status_msg = f"Moved Object [{self.selected_id}] to Grid ({new_x}, {new_y})"
     
     def try_rotate(self, degree):
-        obj=self.objects[self.selected_id]
-        if obj.object_type.type_id == 'mirror':
-            if obj.direction == 45:
+        selected_object = self.objects[self.selected_id]
+        if selected_object.object_type.type_id == 'mirror':
+            if selected_object.angle == 45:
                 self.status_msg = f"Rotated Object [{self.selected_id}]"
-                obj.direction = 135
+                selected_object.angle = 135
 
-            elif obj.direction == 135:
+            elif selected_object.angle == 135:
                 self.status_msg = f"Rotated Object [{self.selected_id}]"
-                obj.direction = 45
+                selected_object.angle = 45
         else:
-            self.status_msg = f"(?) it is meaningless to rotate [{obj.object_type.type_id}]"
+            self.status_msg = f"(?) it is meaningless to rotate [{selected_object.object_type.type_id}]"
         return
             
 def init_colors():
@@ -252,20 +252,7 @@ def main(stdscr):
         offset_y = 2
         offset_x = 2
 
-
         rectangle(stdscr, 1, 0, 23, 75)
-
-        '''
-        # Draw Canvas Outer Border, could use curses.box() or curses.rectangle() but that didn't work
-        for y in range(CANVAS_HEIGHT + 2):
-            for x in range(CANVAS_WIDTH + 2):
-                if y == 0 or y == CANVAS_HEIGHT + 1 or x == 0 or x == CANVAS_WIDTH + 1:
-                    try:
-                        stdscr.addch(offset_y + y - 1, offset_x + x - 1, '█', curses.color_pair(1))
-                    except curses.error:
-                        pass
-
-        '''
 
         # Render Object Instances
         for inst_id, obj in engine.objects.items():
@@ -273,7 +260,7 @@ def main(stdscr):
             base_screen_y = offset_y + (obj.grid_y * CELL_HEIGHT)
 
             if obj.object_type.designs:
-                design = obj.object_type.designs.get(str(obj.direction))
+                design = obj.object_type.designs.get(str(obj.angle))
             else :
                 design = obj.object_type.design
             is_selected = (inst_id == engine.selected_id)
@@ -290,7 +277,7 @@ def main(stdscr):
                 elif pos == 9:
                     val = " "
                 else:
-                    val = design.get(str(pos), " ")[0]   #get the color of the character,val is string
+                    val = design.get(str(pos), " ")[0]   #get the color of the character, val is string
                     
 
                 screen_y = base_screen_y + sub_r
