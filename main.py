@@ -1,5 +1,6 @@
 import curses
 import json
+import random
 from pathlib import Path
 from curses.textpad import rectangle
 from dataclasses import dataclass
@@ -50,7 +51,7 @@ COLOR_MAP = {
 class ObjectType:
     """Represents a 3x3 object design template loaded from assets/objects/*.json"""
     type_id: int  # type_id of object
-    initial_angle: int
+    initial_angle: str
     name: str
     design: dict
     designs: dict  # Dict with keys "1" through "9". 0 is not used for now
@@ -62,7 +63,7 @@ class ObjectType:
         data = json.loads(filepath.read_text(encoding="utf-8"))
 
         type_id = data.get("type_id", Path(filepath).stem)
-        initial_angle = data.get("initial_angle", 45)
+        initial_angle = data.get("initial_angle", "random")
         name = data.get("name", None )
         design = data.get("design", {})
         designs = data.get("designs", {}) # specially for rotatable objects
@@ -77,7 +78,7 @@ class GameObjectInstance:
     object_type: str    # ObjectType reference
     grid_x: int # Grid X (0..11)
     grid_y: int # Grid Y (0..6)
-    angle: int = 45
+    angle: str = "north"
 
 
 
@@ -111,7 +112,6 @@ class GameEngine:
         level_data = json.loads(level_file.read_text(encoding="utf-8"))
 
 
-
         for item in level_data.get("objects", []):
             instance_id = str(item["id"])
             type_id = item["type"]
@@ -119,20 +119,22 @@ class GameEngine:
             grid_y = item["y"]
 
             if type_id in self.object_types:
+                obj_type = self.object_types[type_id]
+
+                angle = item.get("angle", obj_type.initial_angle)
+                if not angle or angle == "random":
+                    angle = random.choice(["north", "east", "south", "west"])  # Random angle for rotatable objects
+
                 obj_instance = GameObjectInstance(
                     instance_id = instance_id,
                     object_type = self.object_types[type_id],
                     grid_x = grid_x,
                     grid_y = grid_y,
-                    angle = self.object_types[type_id].initial_angle
+                    angle = angle
                 )
                 self.objects[instance_id] = obj_instance
 
         # Auto-selection of the first available object
-        # If someone read this and is wondering why I did not just select
-        #   the first object in the list, it is because I wanted to sort the
-        #   keys so that the selection order is always consistent
-        #   (e.g., '1', '2', '3', ...), regardless of how they are defined in the JSON file.
         if self.objects:
             self.selected_id = sorted(self.objects.keys())[0]
 
@@ -184,20 +186,24 @@ class GameEngine:
         selected_object.grid_x = new_x
         selected_object.grid_y = new_y
         self.status_msg = f"Moved Object [{self.selected_id}] to Grid ({new_x}, {new_y})"
-    
-    def try_rotate(self, degree):
-        selected_object = self.objects[self.selected_id]
-        if selected_object.object_type.type_id == 'mirror':
-            if selected_object.angle == 45:
-                self.status_msg = f"Rotated Object [{self.selected_id}]"
-                selected_object.angle = 135
 
-            elif selected_object.angle == 135:
-                self.status_msg = f"Rotated Object [{self.selected_id}]"
-                selected_object.angle = 45
+    # Clockwise rotation
+    def try_rotate(self):
+        selected_object = self.objects[self.selected_id]
+        if selected_object.angle == "north":
+            self.status_msg = f"Rotated Object [{self.selected_id}]"
+            selected_object.angle = "east"
+        elif selected_object.angle == "east":
+            self.status_msg = f"Rotated Object [{self.selected_id}]"
+            selected_object.angle = "south"
+        elif selected_object.angle == "south":
+            self.status_msg = f"Rotated Object [{self.selected_id}]"
+            selected_object.angle = "west"
+        elif selected_object.angle == "west":
+            self.status_msg = f"Rotated Object [{self.selected_id}]"
+            selected_object.angle = "north"
         else:
-            self.status_msg = f"(?) it is meaningless to rotate [{selected_object.object_type.type_id}]"
-        return
+            pass
             
 def init_colors():
     curses.start_color()
@@ -320,7 +326,7 @@ def main(stdscr):
         elif key in (ord('d'), ord('D'), curses.KEY_RIGHT):
             engine.try_move(1, 0)
         elif key in (ord('r'), ord('R')):
-            engine.try_rotate(90)
+            engine.try_rotate()
         else:
             # Check key press for object selection.....
             try:

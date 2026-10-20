@@ -3,7 +3,6 @@
   "name": "gun",
   "is_movable": true,
   "is_fragile":false,
-  "initial_angle": 90,
   "design": {
     "1": ["green"," "],
     "2": ["green"," "],
@@ -27,7 +26,7 @@
     "18": ["green"," "]
   },
   "designs": {
-    "90": {
+    "north": {
       "1": ["green"," "],
       "2": ["green"," "],
       "3": ["green","▟"],
@@ -49,7 +48,7 @@
       "17": ["green"," "],
       "18": ["green"," "]
     },
-    "180":{
+    "east":{
       "1": ["green"," "],
       "2": ["green"," "],
       "3": ["green","█"],
@@ -71,7 +70,7 @@
     "17": ["green",""],
     "18": ["green"," "]
     },
-    "270":{
+    "south":{
       "1": ["green"," "],
       "2": ["green"," "],
       "3": ["green","█"],
@@ -93,7 +92,7 @@
       "17": ["green"," "],
       "18": ["green"," "]
     },
-    "360": {
+    "west": {
       "1":["green"," "],
       "2": ["green",""],
       "3": ["green","▄"],
