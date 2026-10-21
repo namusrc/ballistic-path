@@ -1,7 +1,7 @@
 import random
 from pathlib import Path
 import json
-from constants import GRID_COLS, GRID_ROWS
+from constants import GRID_COLS, GRID_ROWS, CELL_HEIGHT, CELL_WIDTH
 from models import ObjectType, GameObjectInstance, Bullet
 
 class GameEngine:
@@ -95,7 +95,7 @@ class GameEngine:
                 self.status_msg = f"[BLOCKED] Hit grid boundary at ({new_x}, {new_y})"
                 return
 
-        # Let's make the gun rotatable.
+        # Let's make the gun rotatable and let other objects in the outer ring.
         """
         else: # gun can only move in the outer ring
             if new_x == 0:
@@ -162,11 +162,12 @@ class GameEngine:
             self.status_msg = f"Selected object [{self.selected_id}] is not a gun"
             return
 
+        # Because each pixel is 6x3 we need to move 2 pixels per tick when travelling horizontally
         directions = {
             "north": (0, -1),
-            "east": (1, 0),
+            "east": (2, 0),
             "south": (0, 1),
-            "west": (-1, 0)
+            "west": (-2, 0)
         }
 
         if gun.angle not in directions:
@@ -175,21 +176,26 @@ class GameEngine:
 
         dx, dy = directions[gun.angle]
 
-        self.bullets.append(Bullet(x=gun.grid_x, y=gun.grid_y, dx=dx, dy=dy))
+        start_px = (gun.grid_x * CELL_WIDTH) + (CELL_WIDTH // 2)
+        start_py = (gun.grid_y * CELL_HEIGHT) + (CELL_HEIGHT // 2)
+
+        self.bullets.append(Bullet(px=start_px, py=start_py, dx=dx, dy=dy))
+        self.status_msg = f"Shot fired from object [{self.selected_id}]"
 
     def update_bullets(self):
         remaining = []
 
         for bullet in self.bullets:
-            next_x = bullet.x + bullet.dx
-            next_y = bullet.y + bullet.dy
+            bullet.px += bullet.dx
+            bullet.py += bullet.dy
 
-            if not 0 <= next_x < GRID_COLS and 0 <= next_y < GRID_ROWS:
-                self.status_msg = f"[BLOCKED] Hit grid boundary at ({next_x}, {next_y})"
+            current_grid_x = int(bullet.px // CELL_WIDTH)
+            current_grid_y = int(bullet.py // CELL_HEIGHT)
+
+            if not (0 <= current_grid_x < GRID_COLS and 0 <= current_grid_y < GRID_ROWS):
+                self.status_msg = f"[BLOCKED] Hit grid boundary at ({current_grid_x}, {current_grid_y}"
                 continue
 
-            bullet.x = next_x
-            bullet.y = next_y
             remaining.append(bullet)
 
         self.bullets = remaining

@@ -38,7 +38,7 @@ class GameObjectInstance:
 
 @dataclass
 class Bullet:
-    x: int
-    y: int
+    px: int # px and py is exact pixel -- not the 12x7 cell
+    py: int
     dx: int
     dy: int
