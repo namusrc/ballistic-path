@@ -2,7 +2,7 @@
   "type_id": "mirror",
   "name": "mirror",
   "is_movable": true,
-  "is_fragile": false,
+  "is_fragile": true,
   "design": {
     "1": ["blue","▀"],
     "2": ["blue","█"],

@@ -176,8 +176,18 @@ class GameEngine:
 
         dx, dy = directions[gun.angle]
 
-        start_px = (gun.grid_x * CELL_WIDTH) + (CELL_WIDTH // 2)
-        start_py = (gun.grid_y * CELL_HEIGHT) + (CELL_HEIGHT // 2)
+        # To make bullet spawn at the edge of gun, not center.
+        barrel_offsets = {
+            "north": (0, - (CELL_HEIGHT // 2)),
+            "east":  (CELL_WIDTH // 2, 0),
+            "south": (0, CELL_HEIGHT // 2),
+            "west":  (- (CELL_WIDTH // 2), 0)
+        }
+
+        ox, oy = barrel_offsets.get(gun.angle, (0, 0))
+        
+        start_px = (gun.grid_x * CELL_WIDTH) + (CELL_WIDTH // 2) + ox
+        start_py = (gun.grid_y * CELL_HEIGHT) + (CELL_HEIGHT // 2) + oy
 
         self.bullets.append(Bullet(px=start_px, py=start_py, dx=dx, dy=dy))
         self.status_msg = f"Shot fired from object [{self.selected_id}]"
@@ -196,6 +206,17 @@ class GameEngine:
                 self.status_msg = f"[BLOCKED] Hit grid boundary at ({current_grid_x}, {current_grid_y}"
                 continue
 
+            hit_obstacle = False
+            for other_id, other_obj in self.objects.items():
+                if other_obj.grid_x == current_grid_x and other_obj.grid_y == current_grid_y:
+                    if not other_obj.object_type.is_fragile:
+                        self.status_msg = f"[BLOCKED] Cell ({current_grid_x}, {current_grid_y}) occupied by Object [{other_id}]"
+                        hit_obstacle = True
+                        break  # Stop checking other objects
+
+            if hit_obstacle:
+                continue
+                    
             remaining.append(bullet)
 
         self.bullets = remaining
