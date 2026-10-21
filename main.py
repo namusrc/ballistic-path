@@ -80,6 +80,12 @@ class GameObjectInstance:
     grid_y: int # Grid Y (0..6)
     angle: str
 
+@dataclass
+class Bullet:
+    x: int
+    y: int
+    dx: int
+    dy: int
 
 
 class GameEngine:
@@ -89,7 +95,8 @@ class GameEngine:
         self.object_types = {}    # type_id -> ObjectType
         self.objects = {}         # instance_id -> GameObjectInstance
         self.selected_id = None
-        self.status_msg = "Use 0-9 to select object | WASD to move | Q to quit"
+        self.bullets = []        # List of Bullet instances
+        self.status_msg = "Use 0-9 to select object | WASD to move | F to sho12f12ot11 1| Q to quit"
 
     def load_assets_and_level(self):
         objects_dir = Path("assets/objects")
@@ -122,8 +129,10 @@ class GameEngine:
                 obj_type = self.object_types[type_id]
 
                 angle = item.get("initial_angle", obj_type.initial_angle)
+
+                # Random angle for rotatable objects, if not specified in level file
                 if not angle or angle == "random":
-                    angle = random.choice(["north", "east", "south", "west"])  # Random angle for rotatable objects
+                    angle = random.choice(["north", "east", "south", "west"])  
 
                 obj_instance = GameObjectInstance(
                     instance_id = instance_id,
@@ -139,6 +148,10 @@ class GameEngine:
             self.selected_id = sorted(self.objects.keys())[0]
 
     def try_move(self, dx, dy):
+        if self.bullets:
+            self.status_msg = "Cannot move while bullet is in motion"
+            return
+        
         if not self.selected_id or self.selected_id not in self.objects:
             self.status_msg = "No object selected!"
             return
@@ -194,6 +207,14 @@ class GameEngine:
 
     # Clockwise rotation
     def try_rotate(self):
+        if self.bullets:
+            self.status_msg = "Cannot rotate while bullet is in motion"
+            return
+
+        if not self.selected_id or self.selected_id not in self.objects:
+            self.status_msg = "No object selected"
+            return
+        
         selected_object = self.objects[self.selected_id]
         if selected_object.angle == "north":
             self.status_msg = f"Rotated Object [{self.selected_id}]"
@@ -209,6 +230,54 @@ class GameEngine:
             selected_object.angle = "north"
         else:
             pass
+
+    def shoot(self):
+        if self.bullets:
+            self.status_msg = "Bullet already in motion"
+            return
+
+        if self.selected_id not in self.objects:
+            self.status_msg = "No object selected"
+            return
+
+        gun = self.objects[self.selected_id]
+
+        if str(gun.object_type.type_id) != "gun":
+            self.status_msg = f"Selected object [{self.selected_id}] is not a gun"
+            return
+
+        directions = {
+            "north": (0, -1),
+            "east": (1, 0),
+            "south": (0, 1),
+            "west": (-1, 0)
+        }
+
+        if gun.angle not in directions:
+            self.status_msg = f"Gun [{self.selected_id}] has invalid angle {gun.angle}"
+            return
+
+        dx, dy = directions[gun.angle]
+
+        self.bullets.append(Bullet(x=gun.grid_x, y=gun.grid_y, dx=dx, dy=dy))
+
+    def update_bullets(self):
+        remaining = []
+
+        for bullet in self.bullets:
+            next_x = bullet.x + bullet.dx
+            next_y = bullet.y + bullet.dy
+
+            if not 0 <= next_x < GRID_COLS and 0 <= next_y < GRID_ROWS:
+                self.status_msg = f"[BLOCKED] Hit grid boundary at ({next_x}, {next_y})"
+                continue
+
+            bullet.x = next_x
+            bullet.y = next_y
+            remaining.append(bullet)
+
+        self.bullets = remaining
+
             
 def init_colors():
     curses.start_color()
@@ -235,6 +304,8 @@ def main(stdscr):
 
     engine = GameEngine()
     engine.load_assets_and_level()
+
+    stdscr.timeout(150)
 
     while True:
         stdscr.erase()
@@ -306,6 +377,24 @@ def main(stdscr):
                 except curses.error:
                     pass
 
+        # render bullets
+        for bullet in engine.bullets:
+            base_screen_x = offset_x + bullet.x * CELL_WIDTH
+            base_screen_y = offset_y + bullet.y * CELL_HEIGHT
+
+            screen_x = base_screen_x + 2
+            screen_y = base_screen_y + 1
+
+        try:
+            stdscr.addstr(
+                screen_y,
+                screen_x,
+                "*",
+                curses.A_BLINK
+            )
+        except curses.error:
+            pass
+
         # Header and Status Bar
         try:
             active_ids = sorted(engine.objects.keys())
@@ -332,6 +421,8 @@ def main(stdscr):
             engine.try_move(1, 0)
         elif key in (ord('r'), ord('R')):
             engine.try_rotate()
+        elif key in (ord('f'), ord('F')):
+            engine.shoot()
         else:
             # Check key press for object selection.....
             try:
@@ -341,6 +432,8 @@ def main(stdscr):
                     engine.status_msg = f"Selected Object [{char_key}]"
             except ValueError:
                 pass
+
+            engine.update_bullets()
 
 
 if __name__ == "__main__":
