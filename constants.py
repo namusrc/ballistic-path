@@ -2,14 +2,26 @@
 
 import curses
 
+# Grid and Aspect Ratio Configuration, will be moved to constants.py
+# 12 horizontally and 7 vertically
+GRID_COLS = 12
+GRID_ROWS = 7
 
-WIDTH = 80
-HEIGHT = 24
+# Terminal character dimensions, each grid cell is represented as a 6x3 characters,
+#   because each letter is twice as tall as it is wide in terminal.
+CELL_WIDTH = 6
+CELL_HEIGHT = 3
 
-GRID_WIDTH = 20
-GRID_HEIGHT = 7
+CANVAS_WIDTH = GRID_COLS * CELL_WIDTH   # 72 terminal characters
+CANVAS_HEIGHT = GRID_ROWS * CELL_HEIGHT # 21 terminal lines
 
-STYLES = {
-    "title": curses.A_BOLD, "X": curses.A_BOLD, "O": curses.A_BOLD,
-    "success": curses.A_BOLD, "warning": curses.A_BOLD, "muted": curses.A_DIM,
+COLOR_MAP = {
+    "yellow": curses.COLOR_YELLOW,
+    "red": curses.COLOR_RED,
+    "green": curses.COLOR_GREEN,
+    "blue": curses.COLOR_BLUE,
+    "cyan": curses.COLOR_CYAN,
+    "magenta": curses.COLOR_MAGENTA,
+    "white": curses.COLOR_WHITE,
+    "black": curses.COLOR_BLACK
 }
