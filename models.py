@@ -13,6 +13,7 @@ class ObjectType:
     designs: dict  # Dict with keys "1" through "9". 0 is not used for now
     is_movable: bool
     is_fragile: bool
+    is_mirror: bool
 
     @classmethod
     def load_from_file(cls, filepath):
@@ -25,7 +26,8 @@ class ObjectType:
         designs = data.get("designs", {}) # specially for rotatable objects
         is_movable = data.get("is_movable", False)
         is_fragile = data.get("is_fragile", False)
-        return cls(type_id, initial_angle, name, design, designs, is_movable, is_fragile)
+        is_mirror = data.get("is_mirror", False)
+        return cls(type_id, initial_angle, name, design, designs, is_movable, is_fragile, is_mirror)
 
 @dataclass
 class GameObjectInstance:

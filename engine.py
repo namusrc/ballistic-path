@@ -158,7 +158,7 @@ class GameEngine:
 
         gun = self.objects[self.selected_id]
 
-        if str(gun.object_type.type_id) != "gun":
+        if gun.object_type.type_id != "gun":
             self.status_msg = f"Selected object [{self.selected_id}] is not a gun"
             return
 
@@ -198,12 +198,12 @@ class GameEngine:
         for bullet in self.bullets:
 
             # Bullet trail on/off
-            """
+            
             bullet.trail.append((bullet.px, bullet.py)) # For trail, saving last 3 bulet posiotn
         
             if len(bullet.trail) > 3:
                 bullet.trail = bullet.trail[-3:]
-            """
+            
             bullet.px += bullet.dx
             bullet.py += bullet.dy
 
@@ -217,7 +217,35 @@ class GameEngine:
             hit_obstacle = False
             for other_id, other_obj in self.objects.items():
                 if other_obj.grid_x == current_grid_x and other_obj.grid_y == current_grid_y:
-                    if not other_obj.object_type.is_fragile:
+                    
+
+                    if other_obj.object_type.is_mirror:
+                        if other_obj.angle in ("north", "south"):
+                            if bullet.dx == 0 and bullet.dy == -1: # North
+                                bullet.dx, bullet.dy = 2, 0        # East
+                            if bullet.dx == 2 and bullet.dy == 0:  # East
+                                bullet.dx, bullet.dy = 0, 1        # North
+                            if bullet.dx == 0 and bullet.dy == 1: # South
+                                bullet.dx, bullet.dy = -2, 0       # West
+                            if bullet.dx == -2 and bullet.dy == 0: # West
+                                bullet.dx, bullet.dy = 0, -1       # South
+
+                        elif other_obj.angle in ("west", "east"):
+                            if bullet.dx == 0 and bullet.dy == -1: # North
+                                bullet.dx, bullet.dy = -2, 0       # West
+                            if bullet.dx == 2 and bullet.dy == 0:  # East
+                                bullet.dx, bullet.dy = 0, -1       # South
+                            if bullet.dx == 0 and bullet.dy == 1: # South
+                                bullet.dx, bullet.dy = 2, 0        # East
+                            if bullet.dx == -2 and bullet.dy == 0: # West
+                                bullet.dx, bullet.dy = 0, 1        # North
+
+                        break
+
+                    elif other_obj.object_type.is_fragile:
+                        pass
+                    
+                    elif not other_obj.object_type.is_fragile:
                         self.status_msg = f"[BLOCKED] Cell ({current_grid_x}, {current_grid_y}) occupied by Object [{other_id}]"
                         hit_obstacle = True
                         break  # Stop checking other objects
