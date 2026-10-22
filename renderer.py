@@ -90,8 +90,14 @@ def render_frame(stdscr, engine, color_pairs):
         screen_x = offset_x + int(bullet.px)
         screen_y = offset_y + int(bullet.py)
 
+        for t_px, t_py in bullet.trail:
+            try:
+                stdscr.addstr(offset_y + t_py, offset_x + t_px, "□", curses.A_DIM)
+            except curses.error:
+                pass
+
         try:
-            stdscr.addstr(screen_y, screen_x, "*", curses.A_BOLD)
+            stdscr.addstr(screen_y, screen_x, "■", curses.A_BOLD)
         except curses.error:
             pass
 

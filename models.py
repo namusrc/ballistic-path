@@ -1,5 +1,5 @@
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 
@@ -42,3 +42,4 @@ class Bullet:
     py: int
     dx: int
     dy: int
+    trail: list = field(default_factory=list)

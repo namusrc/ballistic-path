@@ -196,6 +196,14 @@ class GameEngine:
         remaining = []
 
         for bullet in self.bullets:
+
+            # Bullet trail on/off
+            """
+            bullet.trail.append((bullet.px, bullet.py)) # For trail, saving last 3 bulet posiotn
+        
+            if len(bullet.trail) > 3:
+                bullet.trail = bullet.trail[-3:]
+            """
             bullet.px += bullet.dx
             bullet.py += bullet.dy
 

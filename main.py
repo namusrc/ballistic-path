@@ -19,10 +19,6 @@ from renderer import init_colors, render_frame
 # Every object has a type tag
 # Every object has a zone tag, that object can only move in specific zone
 
-            
-import curses
-from engine import GameEngine
-from renderer import init_colors, render_frame
 
 def main(stdscr):
     curses.curs_set(0)
