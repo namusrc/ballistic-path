@@ -3,6 +3,7 @@
   "name": "Fragile Yellow Box",
   "is_movable": true,
   "is_fragile": true,
+  "is_rotatable": false,
   "design": {
     "1": ["yellow","█"],
     "2": ["yellow","█"],

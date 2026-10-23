@@ -3,6 +3,7 @@
   "name": "Loosely Fixed Mirror",
   "is_movable": false,
   "is_fragile": false,
+  "is_rotatable": true,
   "design": {
     "1": ["blue","▀"],
     "2": ["blue","█"],

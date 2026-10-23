@@ -3,6 +3,7 @@
   "name": "Gun",
   "is_movable": true,
   "is_fragile": false,
+  "is_rotatable": true,
   "design": {
     "1": ["green"," "],
     "2": ["green"," "],

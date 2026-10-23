@@ -12,8 +12,8 @@ class ObjectType:
     design: dict
     designs: dict  # Dict with keys "1" through "9". 0 is not used for now
     is_movable: bool
-    is_fragile: bool
     is_rotatable: bool
+    is_fragile: bool
     is_mirror: bool
 
     @classmethod
@@ -26,9 +26,9 @@ class ObjectType:
         design = data.get("design", {})
         designs = data.get("designs", {}) # specially for rotatable objects
         is_movable = data.get("is_movable", False)
+        is_rotatable = data.get("is_rotatable", True)
         is_fragile = data.get("is_fragile", False)
         is_mirror = data.get("is_mirror", False)
-        is_rotatable = data.get("is_rotatable", True)
         return cls(type_id, initial_angle, name, design, designs, is_movable, is_rotatable, is_fragile, is_mirror)
 
 @dataclass
