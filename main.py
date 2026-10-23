@@ -19,10 +19,6 @@ from renderer import init_colors, render_frame
 # Every object has a type tag
 # Every object has a zone tag, that object can only move in specific zone
 
-            
-import curses
-from engine import GameEngine
-from renderer import init_colors, render_frame
 
 def main(stdscr):
     curses.curs_set(0)
@@ -30,7 +26,8 @@ def main(stdscr):
     color_pairs = init_colors()
 
     engine = GameEngine()
-    engine.load_assets_and_level()
+    engine.load_assets()
+    engine.load_level(1)
 
     stdscr.timeout(150)
 
@@ -60,6 +57,8 @@ def main(stdscr):
             engine.try_rotate()
         elif key in (ord('f'), ord('F')):
             engine.shoot()
+        elif key == ord('?'):
+            engine.debug()
         else:
             try:
                 char_key = chr(key)

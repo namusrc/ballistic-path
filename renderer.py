@@ -63,9 +63,9 @@ def render_frame(stdscr, engine, color_pairs):
             sub_r = (pos - 1) // 6
             sub_c = (pos - 1) % 6
 
-            if pos == 10 and obj.object_type.is_movable:
+            if pos == 10 and (obj.object_type.is_movable or obj.object_type.is_rotatable):
                 val = inst_id
-            elif pos == 9 and obj.object_type.is_movable:
+            elif pos == 9 and (obj.object_type.is_movable or obj.object_type.is_rotatable):
                 val = " "
             else:
                 val = design.get(str(pos), " ")[0]

@@ -12,11 +12,10 @@ class GameEngine:
         self.objects = {}         # instance_id -> GameObjectInstance
         self.selected_id = None
         self.bullets = []        # List of Bullet instances
-        self.status_msg = "Use 0-9 to select object | WASD to move | F to sho12f12ot11 1| Q to quit"
+        self.status_msg = "Use 0-9 to select object | WASD to move | F to shoot | Q to quit"
 
-    def load_assets_and_level(self):
+    def load_assets(self):
         objects_dir = Path("assets/objects")
-        level_file = Path("assets/levels/level_1.json")
 
         # Load Object Designs
         for json_file in objects_dir.glob("*.json"):
@@ -27,10 +26,16 @@ class GameEngine:
                 print(f"Error loading object template {json_file}: {e}")
 
 
+    def load_level(self, level=1):
+        level_file = Path(f"assets/levels/level_{level}.json")
 
         # Load Level Data
         if not level_file.exists():
             raise FileNotFoundError(f"Level file not found at {level_file}")
+
+        self.objects.clear()
+        self.bullets.clear()
+        self.selected_id = None
         
         level_data = json.loads(level_file.read_text(encoding="utf-8"))
 
@@ -62,6 +67,9 @@ class GameEngine:
         # Auto-selection of the first available object
         if self.objects:
             self.selected_id = sorted(self.objects.keys())[0]
+
+    def debug(self):
+        self.load_level(0)
 
     def try_move(self, dx, dy):
         if self.bullets:
