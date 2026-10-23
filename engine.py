@@ -1,7 +1,7 @@
 import random
 from pathlib import Path
 import json
-from constants import GRID_COLS, GRID_ROWS
+from constants import GRID_COLS, GRID_ROWS, CELL_HEIGHT, CELL_WIDTH
 from models import ObjectType, GameObjectInstance, Bullet
 
 class GameEngine:
@@ -103,7 +103,7 @@ class GameEngine:
                 self.status_msg = f"[BLOCKED] Hit grid boundary at ({new_x}, {new_y})"
                 return
 
-        # Let's make the gun rotatable.
+        # Let's make the gun rotatable and let other objects in the outer ring.
         """
         else: # gun can only move in the outer ring
             if new_x == 0:
@@ -166,15 +166,16 @@ class GameEngine:
 
         gun = self.objects[self.selected_id]
 
-        if str(gun.object_type.type_id) != "gun":
+        if gun.object_type.type_id != "gun":
             self.status_msg = f"Selected object [{self.selected_id}] is not a gun"
             return
 
+        # Because each pixel is 6x3 we need to move 2 pixels per tick when travelling horizontally
         directions = {
             "north": (0, -1),
-            "east": (1, 0),
+            "east": (2, 0),
             "south": (0, 1),
-            "west": (-1, 0)
+            "west": (-2, 0)
         }
 
         if gun.angle not in directions:
@@ -183,21 +184,83 @@ class GameEngine:
 
         dx, dy = directions[gun.angle]
 
-        self.bullets.append(Bullet(x=gun.grid_x, y=gun.grid_y, dx=dx, dy=dy))
+        # To make bullet spawn at the edge of gun, not center.
+        barrel_offsets = {
+            "north": (0, - (CELL_HEIGHT // 2)),
+            "east":  (CELL_WIDTH // 2, 0),
+            "south": (0, CELL_HEIGHT // 2),
+            "west":  (- (CELL_WIDTH // 2), 0)
+        }
+
+        ox, oy = barrel_offsets.get(gun.angle, (0, 0))
+        
+        start_px = (gun.grid_x * CELL_WIDTH) + (CELL_WIDTH // 2) + ox
+        start_py = (gun.grid_y * CELL_HEIGHT) + (CELL_HEIGHT // 2) + oy
+
+        self.bullets.append(Bullet(px=start_px, py=start_py, dx=dx, dy=dy))
+        self.status_msg = f"Shot fired from object [{self.selected_id}]"
 
     def update_bullets(self):
         remaining = []
 
         for bullet in self.bullets:
-            next_x = bullet.x + bullet.dx
-            next_y = bullet.y + bullet.dy
 
-            if not 0 <= next_x < GRID_COLS and 0 <= next_y < GRID_ROWS:
-                self.status_msg = f"[BLOCKED] Hit grid boundary at ({next_x}, {next_y})"
+            # Bullet trail on/off
+            
+            bullet.trail.append((bullet.px, bullet.py)) # For trail, saving last 3 bulet posiotn
+        
+            if len(bullet.trail) > 3:
+                bullet.trail = bullet.trail[-3:]
+            
+            bullet.px += bullet.dx
+            bullet.py += bullet.dy
+
+            current_grid_x = int(bullet.px // CELL_WIDTH)
+            current_grid_y = int(bullet.py // CELL_HEIGHT)
+
+            if not (0 <= current_grid_x < GRID_COLS and 0 <= current_grid_y < GRID_ROWS):
+                self.status_msg = f"[BLOCKED] Hit grid boundary at ({current_grid_x}, {current_grid_y}"
                 continue
 
-            bullet.x = next_x
-            bullet.y = next_y
+            hit_obstacle = False
+            for other_id, other_obj in self.objects.items():
+                if other_obj.grid_x == current_grid_x and other_obj.grid_y == current_grid_y:
+                    
+
+                    if other_obj.object_type.is_mirror:
+                        if other_obj.angle in ("north", "south"):
+                            if bullet.dx == 0 and bullet.dy == -1: # North
+                                bullet.dx, bullet.dy = 2, 0        # East
+                            if bullet.dx == 2 and bullet.dy == 0:  # East
+                                bullet.dx, bullet.dy = 0, 1        # North
+                            if bullet.dx == 0 and bullet.dy == 1: # South
+                                bullet.dx, bullet.dy = -2, 0       # West
+                            if bullet.dx == -2 and bullet.dy == 0: # West
+                                bullet.dx, bullet.dy = 0, -1       # South
+
+                        elif other_obj.angle in ("west", "east"):
+                            if bullet.dx == 0 and bullet.dy == -1: # North
+                                bullet.dx, bullet.dy = -2, 0       # West
+                            if bullet.dx == 2 and bullet.dy == 0:  # East
+                                bullet.dx, bullet.dy = 0, -1       # South
+                            if bullet.dx == 0 and bullet.dy == 1: # South
+                                bullet.dx, bullet.dy = 2, 0        # East
+                            if bullet.dx == -2 and bullet.dy == 0: # West
+                                bullet.dx, bullet.dy = 0, 1        # North
+
+                        break
+
+                    elif other_obj.object_type.is_fragile:
+                        pass
+                    
+                    elif not other_obj.object_type.is_fragile:
+                        self.status_msg = f"[BLOCKED] Cell ({current_grid_x}, {current_grid_y}) occupied by Object [{other_id}]"
+                        hit_obstacle = True
+                        break  # Stop checking other objects
+
+            if hit_obstacle:
+                continue
+                    
             remaining.append(bullet)
 
         self.bullets = remaining

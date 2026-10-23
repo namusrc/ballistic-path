@@ -87,14 +87,17 @@ def render_frame(stdscr, engine, color_pairs):
 
     # Render Bullets
     for bullet in engine.bullets:
-        base_screen_x = offset_x + bullet.x * CELL_WIDTH
-        base_screen_y = offset_y + bullet.y * CELL_HEIGHT
+        screen_x = offset_x + int(bullet.px)
+        screen_y = offset_y + int(bullet.py)
 
-        screen_x = base_screen_x + 2
-        screen_y = base_screen_y + 1
+        for t_px, t_py in bullet.trail:
+            try:
+                stdscr.addstr(offset_y + t_py, offset_x + t_px, "□", curses.A_DIM)
+            except curses.error:
+                pass
 
         try:
-            stdscr.addstr(screen_y, screen_x, "*", curses.A_BOLD)
+            stdscr.addstr(screen_y, screen_x, "■", curses.A_BOLD)
         except curses.error:
             pass
 

@@ -1,5 +1,5 @@
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 
@@ -14,6 +14,7 @@ class ObjectType:
     is_movable: bool
     is_fragile: bool
     is_rotatable: bool
+    is_mirror: bool
 
     @classmethod
     def load_from_file(cls, filepath):
@@ -26,8 +27,9 @@ class ObjectType:
         designs = data.get("designs", {}) # specially for rotatable objects
         is_movable = data.get("is_movable", False)
         is_fragile = data.get("is_fragile", False)
+        is_mirror = data.get("is_mirror", False)
         is_rotatable = data.get("is_rotatable", True)
-        return cls(type_id, initial_angle, name, design, designs, is_movable, is_fragile, is_rotatable)
+        return cls(type_id, initial_angle, name, design, designs, is_movable, is_rotatable, is_fragile, is_mirror)
 
 @dataclass
 class GameObjectInstance:
@@ -40,7 +42,8 @@ class GameObjectInstance:
 
 @dataclass
 class Bullet:
-    x: int
-    y: int
+    px: int # px and py is exact pixel -- not the 12x7 cell
+    py: int
     dx: int
     dy: int
+    trail: list = field(default_factory=list)

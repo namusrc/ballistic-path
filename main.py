@@ -29,7 +29,7 @@ def main(stdscr):
     engine.load_assets()
     engine.load_level(1)
 
-    stdscr.timeout(150)
+    stdscr.timeout(50)
 
     while True:
         # Render the frame, check if terminal is too small
