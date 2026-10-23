@@ -1,8 +1,9 @@
 {
   "type_id": "target",
-  "name": "target",
+  "name": "Target",
   "is_movable": false,
   "is_fragile": true,
+  "is_rotatable": false,
   "design": {
     "1": ["white","◜"],
     "2": ["white","╭"],

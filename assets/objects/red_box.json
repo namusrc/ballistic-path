@@ -3,6 +3,7 @@
   "name": "Red Box",
   "is_movable": false,
   "is_fragile": false,
+  "is_rotatable": false,
   "design": {
     "1": ["red","█"],
     "2": ["red","█"],

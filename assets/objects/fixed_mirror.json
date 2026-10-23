@@ -1,8 +1,9 @@
 {
   "type_id": "fixed_mirror",
-  "name": "fixed_mirror",
+  "name": "Fixed Mirror",
   "is_movable": false,
   "is_fragile": false,
+  "is_rotatable": false,
   "design": {
     "1": ["blue","▀"],
     "2": ["blue","█"],

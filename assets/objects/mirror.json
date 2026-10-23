@@ -1,6 +1,6 @@
 {
   "type_id": "mirror",
-  "name": "mirror",
+  "name": "Mirror",
   "is_movable": true,
   "is_fragile": false,
   "design": {

@@ -1,6 +1,6 @@
 {
   "type_id": "gun",
-  "name": "gun",
+  "name": "Gun",
   "is_movable": true,
   "is_fragile": false,
   "design": {
