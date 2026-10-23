@@ -4,6 +4,7 @@
   "is_movable": false,
   "is_fragile": true,
   "is_rotatable": false,
+  "is_mirror": true,
   "design": {
     "1": ["blue","▀"],
     "2": ["blue","█"],

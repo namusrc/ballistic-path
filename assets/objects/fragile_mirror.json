@@ -2,8 +2,9 @@
   "type_id": "fragile_mirror",
   "name": "Fragile Mirror",
   "is_movable": true,
-  "is_fragile": false,
+  "is_fragile": true,
   "is_rotatable": true,
+  "is_mirror": true,
   "design": {
     "1": ["blue","▀"],
     "2": ["blue","█"],
