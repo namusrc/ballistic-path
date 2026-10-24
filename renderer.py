@@ -27,7 +27,7 @@ def render_frame(stdscr, engine, color_pairs):
     req_width = CANVAS_WIDTH + 6
     req_height = CANVAS_HEIGHT + 6
 
-    # Terminal size check
+    # Terminal size check, freeze the game if the terminal size is too small.
     if max_y < req_height or max_x < req_width:
         try:
             stdscr.addstr(
@@ -63,6 +63,8 @@ def render_frame(stdscr, engine, color_pairs):
             sub_r = (pos - 1) // 6
             sub_c = (pos - 1) % 6
 
+
+            # Show IDs of Objects, only for those that are interactable.
             if pos == 10 and (obj.object_type.is_movable or obj.object_type.is_rotatable):
                 val = inst_id
             elif pos == 9 and (obj.object_type.is_movable or obj.object_type.is_rotatable):

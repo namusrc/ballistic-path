@@ -2,7 +2,7 @@
 
 import curses
 
-# Grid and Aspect Ratio Configuration, will be moved to constants.py
+# Grid and Aspect Ratio Configuration
 # 12 horizontally and 7 vertically
 GRID_COLS = 12
 GRID_ROWS = 7

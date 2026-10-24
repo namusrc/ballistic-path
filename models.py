@@ -2,15 +2,14 @@ import json
 from dataclasses import dataclass, field
 from pathlib import Path
 
-
-@dataclass # Use dataclass library to simpify class init
+@dataclass
 class ObjectType:
     """Represents a 3x3 object design template loaded from assets/objects/*.json"""
-    type_id: int  # type_id of object
+    type_id: int
     initial_angle: str
     name: str
     design: dict
-    designs: dict  # Dict with keys "1" through "9". 0 is not used for now
+    designs: dict
     is_movable: bool
     is_rotatable: bool
     is_fragile: bool
@@ -22,9 +21,9 @@ class ObjectType:
 
         type_id = data.get("type_id", Path(filepath).stem)
         initial_angle = data.get("initial_angle", "random")
-        name = data.get("name", None )
-        design = data.get("design", {})
-        designs = data.get("designs", {}) # specially for rotatable objects
+        name = data.get("name", None)
+        design = data.get("design", {}) # default design for all objects
+        designs = data.get("designs", {}) # specially for rotatable objects that has multiple designs
         is_movable = data.get("is_movable", False)
         is_rotatable = data.get("is_rotatable", True)
         is_fragile = data.get("is_fragile", False)
@@ -38,12 +37,12 @@ class GameObjectInstance:
     object_type: str    # ObjectType reference
     grid_x: int # Grid X (0..11)
     grid_y: int # Grid Y (0..6)
-    angle: str
+    angle: str # north, east, south, and west
 
 @dataclass
 class Bullet:
     px: int # px and py is exact pixel -- not the 12x7 cell
     py: int
-    dx: int
+    dx: int # dx and dx is the cell x an y
     dy: int
     trail: list = field(default_factory=list)
