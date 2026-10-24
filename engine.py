@@ -202,7 +202,12 @@ class GameEngine:
 
     def update_bullets(self):
         remaining = []
-
+        directions = {
+            "north": (0, -1),
+            "east": (2, 0),
+            "south": (0, 1),
+            "west": (-2, 0)
+        }
         for bullet in self.bullets:
 
             # Bullet trail on/off
@@ -223,32 +228,34 @@ class GameEngine:
                 continue
 
             hit_obstacle = False
+            
             for other_id, other_obj in self.objects.items():
-                if other_obj.grid_x == current_grid_x and other_obj.grid_y == current_grid_y:
-                    
-
+                centerofobj_x=[other_obj.grid_x*CELL_WIDTH+2,other_obj.grid_x*CELL_WIDTH+3]
+                centerofobj_y=[other_obj.grid_y*CELL_HEIGHT+1]
+                #the bullet only change direction when it hit the "center" of mirror
+                #centerofobj_x and centerofobj_y are the possible two coordinates of "center of mirror"
+                if (bullet.px in centerofobj_x) and (bullet.py in centerofobj_y):
                     if other_obj.object_type.is_mirror:
+                        original_direction=(bullet.dx,bullet.dy)      
                         if other_obj.angle in ("north", "south"):
-                            if bullet.dx == 0 and bullet.dy == -1: # North
-                                bullet.dx, bullet.dy = 2, 0        # East
-                            if bullet.dx == 2 and bullet.dy == 0:  # East
-                                bullet.dx, bullet.dy = 0, 1        # North
-                            if bullet.dx == 0 and bullet.dy == 1: # South
-                                bullet.dx, bullet.dy = -2, 0       # West
-                            if bullet.dx == -2 and bullet.dy == 0: # West
-                                bullet.dx, bullet.dy = 0, -1       # South
-
+                            reflection_map = {
+                                directions["north"]: directions["west"],
+                                directions["west"]: directions["north"],
+                                directions["south"]: directions["east"],
+                                directions["east"]: directions["south"],
+                            }                                                  
                         elif other_obj.angle in ("west", "east"):
-                            if bullet.dx == 0 and bullet.dy == -1: # North
-                                bullet.dx, bullet.dy = -2, 0       # West
-                            if bullet.dx == 2 and bullet.dy == 0:  # East
-                                bullet.dx, bullet.dy = 0, -1       # South
-                            if bullet.dx == 0 and bullet.dy == 1: # South
-                                bullet.dx, bullet.dy = 2, 0        # East
-                            if bullet.dx == -2 and bullet.dy == 0: # West
-                                bullet.dx, bullet.dy = 0, 1        # North
-
-                        break
+                            reflection_map = {
+                                        directions["north"]: directions["east"],
+                                        directions["east"]: directions["north"],
+                                        directions["south"]: directions["west"],
+                                        directions["west"]: directions["south"],
+                                    }
+                        else:
+                                reflection_map = {}
+                                
+                        if original_direction in reflection_map:
+                            bullet.dx, bullet.dy = reflection_map[original_direction]
 
                     elif other_obj.object_type.is_fragile:
                         pass
