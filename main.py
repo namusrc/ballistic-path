@@ -1,9 +1,10 @@
 import curses
 from engine import GameEngine
-from renderer import init_colors, render_frame
+from renderer import init_colors, render_frame, render_win_screen 
 
 # IMPORTANT. WATCH.
 # https://www.youtube.com/watch?v=dQw4w9WgXcQ
+#DID I SERIOUSLY GET RICKROLLED IN THR BIG 26
 
 # TO-DO:
 # 1. Make the boxes' json file load (done)

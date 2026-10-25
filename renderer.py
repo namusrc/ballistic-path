@@ -1,5 +1,6 @@
 import curses
 from curses.textpad import rectangle
+from turtle import left
 from constants import CANVAS_WIDTH, CANVAS_HEIGHT, CELL_WIDTH, CELL_HEIGHT, COLOR_MAP
 
 
@@ -114,3 +115,31 @@ def render_frame(stdscr, engine, color_pairs):
 
     stdscr.refresh()
     return True
+
+def render_win_screen(stdscr):
+    stdscr.erase()
+    max_y, max_x = stdscr.getmaxyx()
+    green = curses.color_pair("green") | curses.A_BOLD
+    yellow = curses.color_pair("yellow") | curses.A_BOLD
+
+    lines = [
+        ("█   █   ███   █   █    █   █  ███  █   █", green),
+        (" █ █   █   █  █   █    █   █   █   ██  █", green),
+        ("  █    █   █  █   █    █ █ █   █   █ █ █", green),
+        ("  █    █   █  █   █    ██ ██   █   █  ██", green),
+        ("  █     ███    ███     █   █  ███  █   █", green),
+        ("", 0),
+        ("!  All targets destroyed  !", yellow),
+        ("", 0),
+        ("[R] Play again     [Q] Quit", 0),
+    ]
+
+    top_margin = (max_y - len(lines)) // 2
+    left_margin = (max_x - 40) // 2 
+
+    for i, (line, color) in enumerate(lines):
+            stdscr.addstr(top_margin + i, left_margin, line, color)
+    
+    stdscr.refresh()
+    
+ 
