@@ -60,6 +60,8 @@ def main(stdscr):
             engine.shoot()
         elif key == ord('?'):
             engine.debug()
+        elif key == ord("n"):
+            engine.load_next_level()
         else:
             try:
                 char_key = chr(key)

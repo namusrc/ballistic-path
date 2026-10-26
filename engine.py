@@ -39,7 +39,7 @@ class GameEngine:
         
         level_data = json.loads(level_file.read_text(encoding="utf-8"))
 
-
+        self.level_id = level_data.get("level_id")
         for item in level_data.get("objects", []):
             instance_id = str(item["id"])
             type_id = item["type"]
@@ -70,6 +70,13 @@ class GameEngine:
 
     def debug(self):
         self.load_level(0)
+
+    def load_next_level(self):
+        next_level = self.level_id + 1
+        try:
+            self.load_level(next_level)
+        except FileNotFoundError:
+            pass
 
     def try_move(self, dx, dy):
         if self.bullets:
