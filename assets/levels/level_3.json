@@ -1,0 +1,16 @@
+{
+  "level_id": 3,
+  "name": "Level 3",
+  "objects": [
+    { "id": "1", "type": "red_box", "x": 1, "y": 1 },
+    { "id": "2", "type": "yellow_box", "x": 2, "y": 2 },
+    { "id": "3", "type": "yellow_box", "x": 3, "y": 3 },
+    { "id": "5", "type": "green_box", "x": 4, "y": 4 },
+    { "id": "6", "type": "red_box", "x": 1, "y": 2 },
+    { "id": "7", "type": "red_box", "x": 1, "y": 3 },
+    { "id": "8", "type": "gun", "initial_angle": "south", "x": 6, "y": 0 },
+    { "id": "9", "type": "mirror", "x": 6, "y": 5 },
+
+    { "id": "99", "type": "target", "x": 9, "y": 2 }
+  ]
+}

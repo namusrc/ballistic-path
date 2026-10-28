@@ -26,7 +26,7 @@ class GameEngine:
                 print(f"Error loading object template {json_file}: {e}")
 
 
-    def load_level(self, level=1):
+    def load_level(self, level):
         level_file = Path(f"assets/levels/level_{level}.json")
 
         # Load Level Data
@@ -72,11 +72,11 @@ class GameEngine:
         self.load_level(0)
 
     def load_next_level(self):
-        next_level = self.level_id + 1
+        level_number = self.level_id + 1
         try:
-            self.load_level(next_level)
+            self.load_level(level_number)
         except FileNotFoundError:
-            pass
+            return False
 
     def try_move(self, dx, dy):
         if self.bullets:
@@ -263,9 +263,19 @@ class GameEngine:
                                 
                         if original_direction in reflection_map:
                             bullet.dx, bullet.dy = reflection_map[original_direction]
-
+                    #destruction of target or fragile object
                     elif other_obj.object_type.is_fragile:
-                        pass
+                        if other_obj.object_type.type_id == "target":
+                            self.status_msg = f"[HIT] Target [{other_id}] destroyed!"
+                            del self.objects[other_id]
+                            return "hit_target"
+                            
+                        else:
+                            self.status_msg = f"[HIT] Object [{other_id}] destroyed!"
+                            del self.objects[other_id]
+                            break
+
+                        
                     
                     elif not other_obj.object_type.is_fragile:
                         self.status_msg = f"[BLOCKED] Cell ({current_grid_x}, {current_grid_y}) occupied by Object [{other_id}]"

@@ -25,3 +25,4 @@ COLOR_MAP = {
     "white": curses.COLOR_WHITE,
     "black": curses.COLOR_BLACK
 }
+

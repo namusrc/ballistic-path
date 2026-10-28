@@ -11,3 +11,7 @@ each substantive use
 corrections):
 Keep evidence accessible to the teaching team. Remove credentials and unrelated
 personal information. Submit the completed file as ai_use.md with the project.
+
+
+I used GEMINI to simplify the mirror reflection. --Ether
+I ask AI to write a countdown in the win. --Ether 

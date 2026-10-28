@@ -2,7 +2,7 @@ import curses
 from curses.textpad import rectangle
 from turtle import left
 from constants import CANVAS_WIDTH, CANVAS_HEIGHT, CELL_WIDTH, CELL_HEIGHT, COLOR_MAP
-
+import time 
 
 def init_colors():
     curses.start_color()
@@ -116,11 +116,11 @@ def render_frame(stdscr, engine, color_pairs):
     stdscr.refresh()
     return True
 
-def render_win_screen(stdscr):
+def render_win_screen(stdscr,total_seconds):
     stdscr.erase()
     max_y, max_x = stdscr.getmaxyx()
-    green = curses.color_pair("green") | curses.A_BOLD
-    yellow = curses.color_pair("yellow") | curses.A_BOLD
+    green = curses.color_pair(4) | curses.A_BOLD #4 representss green
+    yellow = curses.color_pair(2) | curses.A_BOLD #2 represents yellow
 
     lines = [
         ("█   █   ███   █   █    █   █  ███  █   █", green),
@@ -131,15 +131,39 @@ def render_win_screen(stdscr):
         ("", 0),
         ("!  All targets destroyed  !", yellow),
         ("", 0),
-        ("[R] Play again     [Q] Quit", 0),
+        ("[Q] Quit", 0),
     ]
 
     top_margin = (max_y - len(lines)) // 2
     left_margin = (max_x - 40) // 2 
 
-    for i, (line, color) in enumerate(lines):
-            stdscr.addstr(top_margin + i, left_margin, line, color)
+
+    stdscr.nodelay(True)
+    start_time = time.time()
     
-    stdscr.refresh()
+    #countdown
+    while True:
+        #calculate time passed and time remaining
+        elapsed_time = time.time() - start_time
+        remaining_time = total_seconds - int(elapsed_time)   
+        
+        #Break to loop if times up
+        if remaining_time <= 0:
+            break     
+        
+        # Refresh the screen with remaining time and instructions
+        stdscr.clear()
+        for i, (line, color) in enumerate(lines):
+            stdscr.addstr(top_margin + i, left_margin, line, color)
+        stdscr.addstr(top_margin+10, left_margin, f"Window will be closed in: {remaining_time} seconds", curses.A_BOLD)
+        stdscr.refresh()
+
+        
+        key = stdscr.getch()
+        if key in (ord('q'), ord('Q'), 27):  # Q or ESC
+            break
+        time.sleep(0.1)
+        
+
     
  

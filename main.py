@@ -20,17 +20,20 @@ from renderer import init_colors, render_frame, render_win_screen
 # Every object has a zone tag, that object can only move in specific zone
 
 
+
 def main(stdscr):
+    global level_number
+    level_number=1
+
     curses.curs_set(0)
     stdscr.keypad(True)
     color_pairs = init_colors()
 
     engine = GameEngine()
     engine.load_assets()
-    engine.load_level(1)
-
+    engine.load_level(level_number)
+    
     stdscr.timeout(50)
-
     while True:
         # Render the frame, check if terminal is too small
         success = render_frame(stdscr, engine, color_pairs)
@@ -70,7 +73,18 @@ def main(stdscr):
             except ValueError:
                 pass
 
-        engine.update_bullets()
+        result = engine.update_bullets()
+        if result == "hit_target":
+            engine.status_msg = "[VICTORY] Target destroyed!"
+            status = engine.load_next_level()
+            # design a return value of load_next_level seems weird but it just works for now... 
+            # I tried to make it simple but it did not work
+            
+            if status==False: 
+                render_win_screen(stdscr,5)
+                break 
+
+
 
 if __name__ == "__main__":
     curses.wrapper(main)

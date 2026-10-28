@@ -22,7 +22,7 @@
     { "id": "21", "type": "red_box", "x": 9, "y": 1 },
     { "id": "22", "type": "red_box", "x": 10, "y": 1 },
     { "id": "23", "type": "red_box", "x": 11, "y": 1 },
-    { "id": "24", "type": "red_box", "x": 7, "y": 2 },
+    { "id": "24", "type": "red_box", "x": 7, "y": 3 },
 
     
     { "id": "99", "type": "target", "x": 9, "y": 2 }
