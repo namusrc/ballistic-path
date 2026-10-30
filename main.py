@@ -1,6 +1,6 @@
 import curses
 from engine import GameEngine
-from renderer import init_colors, render_frame, render_win_screen 
+from renderer import init_colors, render_frame, render_win_screen, render_lose_screen, rectangle
 
 # IMPORTANT. WATCH.
 # https://www.youtube.com/watch?v=dQw4w9WgXcQ
