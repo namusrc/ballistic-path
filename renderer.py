@@ -132,6 +132,7 @@ def render_win_screen(stdscr,total_seconds):
         ("!  All targets destroyed  !", yellow),
         ("", 0),
         ("[Q] Quit", 0),
+        ("[Q] Quit", 0),
     ]
 
     top_margin = (max_y - len(lines)) // 2
@@ -155,15 +156,30 @@ def render_win_screen(stdscr,total_seconds):
         stdscr.clear()
         for i, (line, color) in enumerate(lines):
             stdscr.addstr(top_margin + i, left_margin, line, color)
-        stdscr.addstr(top_margin+10, left_margin, f"Window will be closed in: {remaining_time} seconds", curses.A_BOLD)
-        stdscr.refresh()
-
-        
-        key = stdscr.getch()
-        if key in (ord('q'), ord('Q'), 27):  # Q or ESC
-            break
-        time.sleep(0.1)
-        
-
     
- 
+    stdscr.refresh()
+def render_lose_screen(stdscr):
+    stdscr.erase()
+    max_y, max_x = stdscr.getmaxyx()
+    red = curses.color_pair("red") | curses.A_BOLD
+    yellow = curses.color_pair("yellow") | curses.A_BOLD
+
+    lines = [
+        ("█   █   ███   █   █    █       ███    ████  █████", red),
+        (" █ █   █   █  █   █    █      █   █  █      █    ", red),
+        ("  █    █   █  █   █    █      █   █   ███   ████ ", red),
+        ("  █    █   █  █   █    █      █   █      █  █    ", red),
+        ("  █     ███    ███     █████   ███   ████   █████", red),
+        ("", 0),
+        ("! You have been defeated !", yellow),
+        ("", 0),
+        ("[Q] Quit", 0),
+    ]
+
+    top_margin = (max_y - len(lines)) // 2
+    left_margin = (max_x - 40) // 2 
+
+    for i, (line, color) in enumerate(lines):
+            stdscr.addstr(top_margin + i, left_margin, line, color)
+    
+    stdscr.refresh()
