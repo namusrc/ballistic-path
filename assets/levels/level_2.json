@@ -1,14 +1,16 @@
 {
   "level_id": 2,
-  "name": "Level 2",
+  "name": "Level 2: It works",
   "objects": [
-    { "id": "1", "type": "red_box", "x": 1, "y": 1 },
-    { "id": "2", "type": "yellow_box", "x": 2, "y": 2 },
-    { "id": "3", "type": "yellow_box", "x": 3, "y": 3 },
-    { "id": "4", "type": "green_box", "x": 4, "y": 4 },
-    { "id": "5", "type": "mirror", "x": 6, "y": 5 },
-    { "id": "6", "type": "gun", "initial_angle": "south", "x": 6, "y": 0 },
+    { "id": "1", "type": "gun", "initial_angle": "south", "x": 2, "y": 0 },
+    { "id": "2", "type": "mirror", "initial_angle": "east", "x": 4, "y": 5 },
 
-    { "id": "99", "type": "target", "x": 9, "y": 2 }
+    { "id": "10", "type": "red_box", "x": 5, "y": 1 },
+    { "id": "11", "type": "red_box", "x": 5, "y": 2 },
+    { "id": "12", "type": "red_box", "x": 5, "y": 3 },
+    { "id": "13", "type": "red_box", "x": 7, "y": 3 },
+    { "id": "14", "type": "red_box", "x": 9, "y": 3 },
+
+    { "id": "99", "type": "target", "x": 9, "y": 5 }
   ]
 }

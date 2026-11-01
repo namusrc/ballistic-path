@@ -1,0 +1,23 @@
+{
+  "level_id": 4,
+  "name": "Level 4: damn ur good",
+  "objects": [
+    { "id": "1", "type": "gun", "initial_angle": "east", "x": 0, "y": 4 },
+    { "id": "2", "type": "yellow_box", "x": 1, "y": 5 },
+    { "id": "3", "type": "mirror", "initial_angle": "north", "x": 6, "y": 3 },
+    { "id": "4", "type": "mirror", "initial_angle": "north", "x": 8, "y": 2 },
+    { "id": "5", "type": "mirror", "initial_angle": "east", "x": 11, "y": 2 },
+
+    { "id": "10", "type": "fragile_red_box", "x": 2, "y": 5 },
+    { "id": "11", "type": "red_box", "x": 3, "y": 3 },
+    { "id": "12", "type": "red_box", "x": 4, "y": 3 },
+    { "id": "13", "type": "red_box", "x": 8, "y": 3 },
+    { "id": "14", "type": "red_box", "x": 8, "y": 4 },
+    { "id": "15", "type": "red_box", "x": 10, "y": 3 },
+    { "id": "16", "type": "red_box", "x": 10, "y": 4 },
+    { "id": "17", "type": "red_box", "x": 7, "y": 5 },
+
+    { "id": "98", "type": "target", "x": 3, "y": 5 },
+    { "id": "99", "type": "target", "x": 9, "y": 4 }
+  ]
+}
