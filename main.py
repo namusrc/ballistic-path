@@ -1,6 +1,6 @@
 import curses
 from engine import GameEngine
-from renderer import init_colors, render_frame, render_win_screen, render_lose_screen, rectangle
+from renderer import init_colors, render_frame, render_win_screen, render_lose_screen
 from constants import GAME_SPEED
 import time
 
@@ -20,7 +20,7 @@ def main(stdscr):
     
     stdscr.timeout(50 * GAME_SPEED)
     start_time = time.time()
-    
+
     while True:
         
         # Render the frame, check if terminal is too small
