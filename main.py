@@ -19,8 +19,10 @@ def main(stdscr):
     engine.load_level()
     
     stdscr.timeout(50 * GAME_SPEED)
+    start_time = time.time()
+    
     while True:
-        start_time = time.time()
+        
         # Render the frame, check if terminal is too small
         success = render_frame(stdscr, engine, color_pairs)
         if not success:
