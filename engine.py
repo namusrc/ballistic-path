@@ -289,6 +289,7 @@ class GameEngine:
             if not any(obj.object_type.type_id == "target" for obj in self.objects.values()): # If no targets left, level complete
                 self.status_msg = "All targets destroyed! Level Complete!"
                 self.load_next_level()
+                continue
                     
             remaining_bullets.append(bullet)
 
