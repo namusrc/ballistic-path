@@ -278,7 +278,7 @@ class GameEngine:
 
                         
                     
-                    elif not other_obj.object_type.is_fragile:
+                    elif not other_obj.object_type.is_fragile and not other_obj.object_type.is_mirror:
                         self.status_msg = f"[BLOCKED] Cell ({current_grid_x}, {current_grid_y}) occupied by Object [{other_id}]"
                         hit_obstacle = True
                         break  # Stop checking other objects
