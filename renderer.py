@@ -1,7 +1,17 @@
 import curses
 from curses.textpad import rectangle
-from constants import CANVAS_WIDTH, CANVAS_HEIGHT, CELL_WIDTH, CELL_HEIGHT, COLOR_MAP
-import time 
+from constants import CANVAS_WIDTH, CANVAS_HEIGHT, CELL_WIDTH, CELL_HEIGHT, WIN_TEXT, LOSE_TEXT
+
+COLOR_MAP = {
+    "yellow": curses.COLOR_YELLOW,
+    "red": curses.COLOR_RED,
+    "green": curses.COLOR_GREEN,
+    "blue": curses.COLOR_BLUE,
+    "cyan": curses.COLOR_CYAN,
+    "magenta": curses.COLOR_MAGENTA,
+    "white": curses.COLOR_WHITE,
+    "black": curses.COLOR_BLACK
+}
 
 def init_colors():
     curses.start_color()
@@ -115,72 +125,56 @@ def render_frame(stdscr, engine, color_pairs):
     stdscr.refresh()
     return True
 
-def render_win_screen(stdscr,total_seconds):
-    stdscr.erase()
+def _draw_centered_lines(stdscr, lines):
     max_y, max_x = stdscr.getmaxyx()
-    green = curses.color_pair(4) | curses.A_BOLD #4 representss green
-    yellow = curses.color_pair(2) | curses.A_BOLD #2 represents yellow
+    top = max(0, (max_y - len(lines)) // 2)
 
-    lines = [
-        ("█   █   ███   █   █    █   █  ███  █   █", green),
-        (" █ █   █   █  █   █    █   █   █   ██  █", green),
-        ("  █    █   █  █   █    █ █ █   █   █ █ █", green),
-        ("  █    █   █  █   █    ██ ██   █   █  ██", green),
-        ("  █     ███    ███     █   █  ███  █   █", green),
-        ("", 0),
-        ("!  All targets destroyed  !", yellow),
-        ("", 0),
-        ("[Q] Quit", 0),
-        ("[Enter] Restart", 0),
-    ]
+    for row, (text, color) in enumerate(lines):
+        y = top + row
+        if y >= max_y:
+            break
 
-    top_margin = (max_y - len(lines)) // 2
-    left_margin = (max_x - 40) // 2 
+        left = max(0, (max_x - len(text)) // 2)
+        available_width = max_x - left - 1
+        if available_width > 0:
+            stdscr.addstr(y, left, text[:available_width], color)
 
+def render_win_screen(stdscr, playtime):
+    stdscr.erase()
+    green = curses.color_pair(4) | curses.A_BOLD
+    yellow = curses.color_pair(2) | curses.A_BOLD
+    plain = curses.color_pair(1)
 
-    stdscr.nodelay(True)
-    start_time = time.time()
-    
-    # Countdown
-    while True:
-        #calculate time passed and time remaining
-        elapsed_time = time.time() - start_time
-        remaining_time = total_seconds - int(elapsed_time)   
-        
-        #Break to loop if times up
-        if remaining_time <= 0:
-            break     
-        
-        # Refresh the screen with remaining time and instructions
-        stdscr.clear()
-        for i, (line, color) in enumerate(lines):
-            stdscr.addstr(top_margin + i, left_margin, line, color)
-    
+    lines = (
+        [(line, green) for line in WIN_TEXT]
+        + [
+            ("", plain),
+            ("!  All levels complete  !", yellow),
+            ("", plain),
+            ("[Q] Quit", plain),
+            ("[Enter] Restart Game", plain),
+            ("", plain),
+            (f"Playtime: {playtime:.2f} seconds", plain),
+        ]
+    )
+    _draw_centered_lines(stdscr, lines)
     stdscr.refresh()
 
 def render_lose_screen(stdscr):
     stdscr.erase()
-    max_y, max_x = stdscr.getmaxyx()
-    red = curses.color_pair("red") | curses.A_BOLD
-    yellow = curses.color_pair("yellow") | curses.A_BOLD
+    red = curses.color_pair(3) | curses.A_BOLD
+    yellow = curses.color_pair(2) | curses.A_BOLD
+    plain = curses.color_pair(1)
 
-    lines = [
-        ("█   █   ███   █   █    █       ███    ████  █████", red),
-        (" █ █   █   █  █   █    █      █   █  █      █    ", red),
-        ("  █    █   █  █   █    █      █   █   ███   ████ ", red),
-        ("  █    █   █  █   █    █      █   █      █  █    ", red),
-        ("  █     ███    ███     █████   ███   ████   █████", red),
-        ("", 0),
-        ("! You have been defeated !", yellow),
-        ("", 0),
-        ("[Q] Quit", 0),
-        ("[Enter] Restart", 0),
-    ]
-
-    top_margin = (max_y - len(lines)) // 2
-    left_margin = (max_x - 40) // 2 
-
-    for i, (line, color) in enumerate(lines):
-            stdscr.addstr(top_margin + i, left_margin, line, color)
-    
+    lines = (
+        [(line, red) for line in LOSE_TEXT]
+        + [
+            ("", plain),
+            ("! You have been defeated !", yellow),
+            ("", plain),
+            ("[Q] Quit", plain),
+            ("[Enter] Restart Level", plain),
+        ]
+    )
+    _draw_centered_lines(stdscr, lines)
     stdscr.refresh()

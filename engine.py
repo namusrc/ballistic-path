@@ -13,6 +13,8 @@ class GameEngine:
         self.selected_id = None
         self.bullets = []        # List of Bullet instances
         self.status_msg = "Use 0-9 to select object | WASD to move | F to shoot | Q to quit"
+        self.state = "RUNNING"  # could be "RUNNING", "LEVEL_COMPLETE", "WIN", "LOSE"
+        self.level_id = 1
 
     def load_assets(self):
         objects_dir = Path("assets/objects")
@@ -26,7 +28,10 @@ class GameEngine:
                 print(f"Error loading object template {json_file}: {e}")
 
 
-    def load_level(self, level):
+    def load_level(self, level=None):
+        if level is None:
+            level = self.level_id
+
         level_file = Path(f"assets/levels/level_{level}.json")
 
         # Load Level Data
@@ -36,9 +41,11 @@ class GameEngine:
         self.objects.clear()
         self.bullets.clear()
         self.selected_id = None
+        self.state = "RUNNING"
         level_data = json.loads(level_file.read_text(encoding="utf-8"))
 
         self.level_id = level_data.get("level_id")
+        self.is_last_level = level_data.get("is_last_level", False)
         for item in level_data.get("objects", []):
             instance_id = str(item["id"])
             type_id = item["type"]
@@ -64,6 +71,7 @@ class GameEngine:
                 self.objects[instance_id] = obj_instance
 
         # Code to declare victory if there are no more levels left.
+        
 
         # Auto-selection of the first available object
         if self.objects:
@@ -231,11 +239,14 @@ class GameEngine:
             current_grid_x = int(bullet.px // CELL_WIDTH)
             current_grid_y = int(bullet.py // CELL_HEIGHT)
 
+            hit_obstacle = False
+
             if not (0 <= current_grid_x < GRID_COLS and 0 <= current_grid_y < GRID_ROWS):
                 self.status_msg = f"[BLOCKED] Hit grid boundary at ({current_grid_x}, {current_grid_y}"
+                hit_obstacle = True
                 continue
 
-            hit_obstacle = False
+            
             
             for other_id, other_obj in self.objects.items():
                 centerofobj_x = [other_obj.grid_x*CELL_WIDTH + 2, other_obj.grid_x * CELL_WIDTH+3]
@@ -284,13 +295,25 @@ class GameEngine:
                         break  # Stop checking other objects
 
             if hit_obstacle:
+                trigger_lose(self)
                 continue
 
             if not any(obj.object_type.type_id == "target" for obj in self.objects.values()): # If no targets left, level complete
-                self.status_msg = "All targets destroyed! Level Complete!"
-                self.load_next_level()
+                self.status_msg = "All targets destroyed! Level Complete! Press ENTER to proceed to the next level."
+                if self.is_last_level:
+                    trigger_win(self)
+                else:
+                    self.state = "LEVEL_COMPLETE"
                 continue
                     
             remaining_bullets.append(bullet)
 
         self.bullets = remaining_bullets
+
+def trigger_lose(self):
+    self.state = "LOSE"
+    self.status_msg = "You have been defeated! Press 'n' to restart the level."
+
+def trigger_win(self):
+    self.state = "WIN"
+    self.status_msg = "All targets destroyed! Press ENTER to proceed to the next level."

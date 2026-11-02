@@ -4,6 +4,9 @@ import curses
 
 # Grid and Aspect Ratio Configuration
 # 12 horizontally and 7 vertically
+
+GAME_SPEED = 1
+
 GRID_COLS = 12
 GRID_ROWS = 7
 
@@ -15,14 +18,18 @@ CELL_HEIGHT = 3
 CANVAS_WIDTH = GRID_COLS * CELL_WIDTH   # 72 terminal characters
 CANVAS_HEIGHT = GRID_ROWS * CELL_HEIGHT # 21 terminal lines
 
-COLOR_MAP = {
-    "yellow": curses.COLOR_YELLOW,
-    "red": curses.COLOR_RED,
-    "green": curses.COLOR_GREEN,
-    "blue": curses.COLOR_BLUE,
-    "cyan": curses.COLOR_CYAN,
-    "magenta": curses.COLOR_MAGENTA,
-    "white": curses.COLOR_WHITE,
-    "black": curses.COLOR_BLACK
-}
+WIN_TEXT = [
+        "█   █   ███   █   █    █   █  ███  █   █",
+        " █ █   █   █  █   █    █   █   █   ██  █",
+        "  █    █   █  █   █    █ █ █   █   █ █ █",
+        "  █    █   █  █   █    ██ ██   █   █  ██",
+        "  █     ███    ███     █   █  ███  █   █",
+]
 
+LOSE_TEXT = [
+        "█   █   ███   █   █    █       ███    ████  █████",
+        " █ █   █   █  █   █    █      █   █  █      █    ",
+        "  █    █   █  █   █    █      █   █   ███   ████ ",
+        "  █    █   █  █   █    █      █   █      █  █    ",
+        "  █     ███    ███     █████   ███   ████   █████",
+]

@@ -1,6 +1,8 @@
 import curses
 from engine import GameEngine
 from renderer import init_colors, render_frame, render_win_screen, render_lose_screen, rectangle
+from constants import GAME_SPEED
+import time
 
 # IMPORTANT. WATCH.
 # https://www.youtube.com/watch?v=oHg5SJYRHA0
@@ -20,10 +22,7 @@ from renderer import init_colors, render_frame, render_win_screen, render_lose_s
 # Every object has a zone tag, that object can only move in specific zone
 
 
-
 def main(stdscr):
-    global level_number
-    level_number=1
 
     curses.curs_set(0)
     stdscr.keypad(True)
@@ -31,10 +30,11 @@ def main(stdscr):
 
     engine = GameEngine()
     engine.load_assets()
-    engine.load_level(level_number)
+    engine.load_level()
     
-    stdscr.timeout(50)
+    stdscr.timeout(50 * GAME_SPEED)
     while True:
+        start_time = time.time()
         # Render the frame, check if terminal is too small
         success = render_frame(stdscr, engine, color_pairs)
         if not success:
@@ -42,6 +42,27 @@ def main(stdscr):
             if key in (ord('q'), ord('Q'), 27):
                 break
             continue
+        if engine.state == "WIN":
+            playtime = time.time() - start_time
+            stdscr.timeout(-1)
+            render_win_screen(stdscr, playtime)
+            if key in (ord('q'), ord('Q'), 27):
+                    return
+            
+        if engine.state == "LOSE":
+            curses.beep()
+            stdscr.timeout(-1)
+            render_lose_screen(stdscr)
+
+            while engine.state == "LOSE":
+                key = stdscr.getch()
+                if key in (ord('q'), ord('Q'), 27):
+                    return
+                elif key in (10, 13, curses.KEY_ENTER):
+                    engine.load_level(engine.level_id)  # Reload the current level
+                    engine.state = "RUNNING"
+                    stdscr.timeout(50 * GAME_SPEED)
+                    break
 
         # Input Processing
         key = stdscr.getch()
@@ -62,8 +83,11 @@ def main(stdscr):
             engine.shoot()
         elif key == ord('?'):
             engine.debug()
-        elif key == ord("n"):
-            engine.load_next_level()
+        elif key == ord('n'): # Debug purpose: Skip to next level. Delete before releasing.
+            engine.state = "LEVEL_COMPLETE"
+        elif key in (10, 13, curses.KEY_ENTER):
+            if engine.state == "LEVEL_COMPLETE":
+                engine.load_next_level()
         else:
             try:
                 char_key = chr(key)
