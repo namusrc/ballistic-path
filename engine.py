@@ -36,7 +36,6 @@ class GameEngine:
         self.objects.clear()
         self.bullets.clear()
         self.selected_id = None
-        
         level_data = json.loads(level_file.read_text(encoding="utf-8"))
 
         self.level_id = level_data.get("level_id")
@@ -63,6 +62,8 @@ class GameEngine:
                     angle = angle
                 )
                 self.objects[instance_id] = obj_instance
+
+        # Code to declare victory if there are no more levels left.
 
         # Auto-selection of the first available object
         if self.objects:
@@ -208,7 +209,7 @@ class GameEngine:
         self.status_msg = f"Shot fired from object [{self.selected_id}]"
 
     def update_bullets(self):
-        remaining = []
+        remaining_bullets = []
         directions = {
             "north": (0, -1),
             "east": (2, 0),
@@ -264,11 +265,11 @@ class GameEngine:
                         if original_direction in reflection_map:
                             bullet.dx, bullet.dy = reflection_map[original_direction]
                     # Destruction of target or fragile object
-                    elif other_obj.object_type.is_fragile:
+                    if other_obj.object_type.is_fragile:
                         if other_obj.object_type.type_id == "target":
                             self.status_msg = f"[HIT] Target [{other_id}] destroyed!"
                             del self.objects[other_id]
-                            return "hit_target"
+                            break
                             
                         else:
                             self.status_msg = f"[HIT] Object [{other_id}] destroyed!"
@@ -284,7 +285,11 @@ class GameEngine:
 
             if hit_obstacle:
                 continue
-                    
-            remaining.append(bullet)
 
-        self.bullets = remaining
+            if not any(obj.object_type.type_id == "target" for obj in self.objects.values()): # If no targets left, level complete
+                self.status_msg = "All targets destroyed! Level Complete!"
+                self.load_next_level()
+                    
+            remaining_bullets.append(bullet)
+
+        self.bullets = remaining_bullets

@@ -73,18 +73,7 @@ def main(stdscr):
             except ValueError:
                 pass
 
-        result = engine.update_bullets()
-        if result == "hit_target":
-            engine.status_msg = "[VICTORY] Target destroyed!"
-            status = engine.load_next_level()
-            # design a return value of load_next_level seems weird but it just works for now... 
-            # I tried to make it simple but it did not work
-            
-            if status == False: 
-                render_win_screen(stdscr, 5)
-                break 
-
-
+        engine.update_bullets()
 
 if __name__ == "__main__":
     curses.wrapper(main)
