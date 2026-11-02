@@ -7,20 +7,6 @@ import time
 # IMPORTANT. WATCH.
 # https://www.youtube.com/watch?v=oHg5SJYRHA0
 
-# TO-DO:
-# 1. Make the boxes' json file load (done)
-# 2. Add Shooting Mechanisms - Ethan
-# 3. Separate files for constants, assets, and main game logic
-# 4. Add Mirrors and Gun objects and Target. (done)
-# 5. Add rotation for mirrors and gun - Chen
-
-# FEATURES
-# Every object has is_fragile tag   
-# Every object has is_movable tag   
-# Every object has color tag
-# Every object has a type tag
-# Every object has a zone tag, that object can only move in specific zone
-
 
 def main(stdscr):
 
