@@ -237,10 +237,10 @@ class GameEngine:
             hit_obstacle = False
             
             for other_id, other_obj in self.objects.items():
-                centerofobj_x=[other_obj.grid_x*CELL_WIDTH+2,other_obj.grid_x*CELL_WIDTH+3]
-                centerofobj_y=[other_obj.grid_y*CELL_HEIGHT+1]
-                #the bullet only change direction when it hit the "center" of mirror
-                #centerofobj_x and centerofobj_y are the possible two coordinates of "center of mirror"
+                centerofobj_x = [other_obj.grid_x*CELL_WIDTH + 2, other_obj.grid_x * CELL_WIDTH+3]
+                centerofobj_y = [other_obj.grid_y*CELL_HEIGHT + 1]
+                # The bullet only change direction when it hit the "center" of mirror
+                # centerofobj_x and centerofobj_y are the possible two coordinates of "center of mirror"
                 if (bullet.px in centerofobj_x) and (bullet.py in centerofobj_y):
                     if other_obj.object_type.is_mirror:
                         original_direction=(bullet.dx,bullet.dy)      
@@ -263,7 +263,7 @@ class GameEngine:
                                 
                         if original_direction in reflection_map:
                             bullet.dx, bullet.dy = reflection_map[original_direction]
-                    #destruction of target or fragile object
+                    # Destruction of target or fragile object
                     elif other_obj.object_type.is_fragile:
                         if other_obj.object_type.type_id == "target":
                             self.status_msg = f"[HIT] Target [{other_id}] destroyed!"

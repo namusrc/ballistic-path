@@ -80,8 +80,8 @@ def main(stdscr):
             # design a return value of load_next_level seems weird but it just works for now... 
             # I tried to make it simple but it did not work
             
-            if status==False: 
-                render_win_screen(stdscr,5)
+            if status == False: 
+                render_win_screen(stdscr, 5)
                 break 
 
 

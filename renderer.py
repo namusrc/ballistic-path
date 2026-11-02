@@ -1,6 +1,5 @@
 import curses
 from curses.textpad import rectangle
-from turtle import left
 from constants import CANVAS_WIDTH, CANVAS_HEIGHT, CELL_WIDTH, CELL_HEIGHT, COLOR_MAP
 import time 
 
@@ -132,7 +131,7 @@ def render_win_screen(stdscr,total_seconds):
         ("!  All targets destroyed  !", yellow),
         ("", 0),
         ("[Q] Quit", 0),
-        ("[Q] Quit", 0),
+        ("[Enter] Restart", 0),
     ]
 
     top_margin = (max_y - len(lines)) // 2
@@ -142,7 +141,7 @@ def render_win_screen(stdscr,total_seconds):
     stdscr.nodelay(True)
     start_time = time.time()
     
-    #countdown
+    # Countdown
     while True:
         #calculate time passed and time remaining
         elapsed_time = time.time() - start_time
@@ -158,6 +157,7 @@ def render_win_screen(stdscr,total_seconds):
             stdscr.addstr(top_margin + i, left_margin, line, color)
     
     stdscr.refresh()
+
 def render_lose_screen(stdscr):
     stdscr.erase()
     max_y, max_x = stdscr.getmaxyx()
@@ -174,6 +174,7 @@ def render_lose_screen(stdscr):
         ("! You have been defeated !", yellow),
         ("", 0),
         ("[Q] Quit", 0),
+        ("[Enter] Restart", 0),
     ]
 
     top_margin = (max_y - len(lines)) // 2
