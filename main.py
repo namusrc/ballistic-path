@@ -15,12 +15,31 @@ import time
 
 
 INTRO_DIALOGUE = (
-    "Ah-ee-ah-ee-ah! Wah-wah-wah!",
-    "\"Looks like I'm a shotgunner of the West in 1863!\"",
-    "You've bet all ya money on that a puzzle your friend gave you would be EZ.",
-    "You have one shot. Make it count.",
-    "Bum Bum Dara Bum Bum Dara Bum Bum Dara",
+    "After hours of thinking, I literally have no idea how to make a bank robbery story without making it sound too cliche.",
+    "What is wrong with my life?",
+    "I should've known that we needed a story in this project. I should have been more careful.",
+    "Can I get a good grade for this course?",
+    "What happens if I can't even graduate? How will I make a living? How will I survive? How will I pay for my rent?",
+    "The answer is simple. I will just have to rob a bank.",
+    "Practice makes perfet. Let's practice robbing a bank!"
+    
 )
+
+LEVEL_DIALOGUES = {
+    1: (
+        "That shot actually worked.",
+        "Maybe this could be my profession.",
+        "Let's try something different"
+    ),
+    2: (
+        "Another target down. It's just like studying maths",
+        "Except that it actually gives you money",
+    ),
+    3: (
+        "Almost there. I'm almost ready to rob HSBC",
+        "I'll be rich.",
+    ),
+}
 
 
 def _draw_centered(stdscr, y, text, attr=0):
@@ -35,7 +54,7 @@ def _draw_centered(stdscr, y, text, attr=0):
             pass
 
 
-def run_intro_dialogue(stdscr):
+def run_dialogue(stdscr, lines, title="Bank Robbery"):
     line_index = 0
     visible_chars = 0
     elapsed_typing = 0.0
@@ -43,7 +62,7 @@ def run_intro_dialogue(stdscr):
     character_interval = 0.035
     stdscr.timeout(50 * GAME_SPEED)
 
-    while line_index < len(INTRO_DIALOGUE):
+    while line_index < len(lines):
         now = time.monotonic()
         max_y, max_x = stdscr.getmaxyx()
         if max_y < VIEWPORT_HEIGHT or max_x < VIEWPORT_WIDTH:
@@ -54,12 +73,12 @@ def run_intro_dialogue(stdscr):
             last_update = time.monotonic()
             continue
 
-        if visible_chars < len(INTRO_DIALOGUE[line_index]):
+        if visible_chars < len(lines[line_index]):
             elapsed_typing += now - last_update
             chars_to_add = int(elapsed_typing / character_interval)
             if chars_to_add:
                 visible_chars = min(
-                    len(INTRO_DIALOGUE[line_index]),
+                    len(lines[line_index]),
                     visible_chars + chars_to_add,
                 )
                 elapsed_typing -= chars_to_add * character_interval
@@ -67,10 +86,10 @@ def run_intro_dialogue(stdscr):
 
         stdscr.erase()
         max_y = min(max_y, VIEWPORT_HEIGHT)
-        _draw_centered(stdscr, max_y // 2 - 3, "BALLISTIC PATH", curses.A_BOLD)
-        _draw_centered(stdscr, max_y // 2 - 1, INTRO_DIALOGUE[line_index][:visible_chars])
-        _draw_centered(stdscr, max_y // 2 + 2, f"{line_index + 1} / {len(INTRO_DIALOGUE)}")
-        if visible_chars == len(INTRO_DIALOGUE[line_index]):
+        _draw_centered(stdscr, max_y // 2 - 3, title, curses.A_BOLD)
+        _draw_centered(stdscr, max_y // 2 - 1, lines[line_index][:visible_chars])
+        _draw_centered(stdscr, max_y // 2 + 2, f"{line_index + 1} / {len(lines)}")
+        if visible_chars == len(lines[line_index]):
             prompt = "[Enter] Next"
         else:
             prompt = "[Enter] Finish line"
@@ -81,8 +100,8 @@ def run_intro_dialogue(stdscr):
         if key in (ord("q"), ord("Q"), 27):
             return False
         if key in (10, 13, curses.KEY_ENTER):
-            if visible_chars < len(INTRO_DIALOGUE[line_index]):
-                visible_chars = len(INTRO_DIALOGUE[line_index])
+            if visible_chars < len(lines[line_index]):
+                visible_chars = len(lines[line_index])
             else:
                 line_index += 1
                 visible_chars = 0
@@ -90,6 +109,10 @@ def run_intro_dialogue(stdscr):
             last_update = time.monotonic()
 
     return True
+
+
+def run_intro_dialogue(stdscr):
+    return run_dialogue(stdscr, INTRO_DIALOGUE)
 
 
 def main(stdscr):
@@ -169,7 +192,11 @@ def main(stdscr):
             engine.state = "LEVEL_COMPLETE"
         elif key in (10, 13, curses.KEY_ENTER):
             if engine.state == "LEVEL_COMPLETE":
+                dialogue = LEVEL_DIALOGUES.get(engine.level_id)
+                if dialogue and not run_dialogue(stdscr, dialogue, "BETWEEN LEVELS"):
+                    return
                 engine.load_next_level()
+                stdscr.timeout(50 * GAME_SPEED)
         else:
             try:
                 char_key = chr(key)

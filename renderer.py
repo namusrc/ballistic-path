@@ -173,7 +173,7 @@ def render_win_screen(stdscr, playtime):
         [(line, green) for line in WIN_TEXT]
         + [
             ("", plain),
-            ("!  All levels complete  !", yellow),
+            ("!  You are the greatest thief  !", yellow),
             ("", plain),
             ("[Q] Quit", plain),
             ("[Enter] Restart Game", plain),
