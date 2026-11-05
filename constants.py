@@ -6,6 +6,8 @@ import curses
 # 12 horizontally and 7 vertically
 
 GAME_SPEED = 1
+VIEWPORT_WIDTH = 80
+VIEWPORT_HEIGHT = 24
 
 GRID_COLS = 12
 GRID_ROWS = 7

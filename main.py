@@ -1,7 +1,13 @@
 import curses
 from engine import GameEngine
-from renderer import init_colors, render_frame, render_win_screen, render_lose_screen
-from constants import GAME_SPEED
+from renderer import (
+    init_colors,
+    render_frame,
+    render_lose_screen,
+    render_resize_message,
+    render_win_screen,
+)
+from constants import GAME_SPEED, VIEWPORT_HEIGHT, VIEWPORT_WIDTH
 import time
 
 # IMPORTANT. WATCH.
@@ -19,9 +25,14 @@ INTRO_DIALOGUE = (
 
 def _draw_centered(stdscr, y, text, attr=0):
     max_y, max_x = stdscr.getmaxyx()
+    max_y = min(max_y, VIEWPORT_HEIGHT)
+    max_x = min(max_x, VIEWPORT_WIDTH)
     if 0 <= y < max_y and max_x > 1:
         x = max(0, (max_x - len(text)) // 2)
-        stdscr.addnstr(y, x, text, max_x - x - 1, attr)
+        try:
+            stdscr.addnstr(y, x, text, max_x - x - 1, attr)
+        except curses.error:
+            pass
 
 
 def run_intro_dialogue(stdscr):
@@ -34,6 +45,15 @@ def run_intro_dialogue(stdscr):
 
     while line_index < len(INTRO_DIALOGUE):
         now = time.monotonic()
+        max_y, max_x = stdscr.getmaxyx()
+        if max_y < VIEWPORT_HEIGHT or max_x < VIEWPORT_WIDTH:
+            render_resize_message(stdscr)
+            key = stdscr.getch()
+            if key in (ord("q"), ord("Q"), 27):
+                return False
+            last_update = time.monotonic()
+            continue
+
         if visible_chars < len(INTRO_DIALOGUE[line_index]):
             elapsed_typing += now - last_update
             chars_to_add = int(elapsed_typing / character_interval)
@@ -46,7 +66,7 @@ def run_intro_dialogue(stdscr):
         last_update = now
 
         stdscr.erase()
-        max_y, _ = stdscr.getmaxyx()
+        max_y = min(max_y, VIEWPORT_HEIGHT)
         _draw_centered(stdscr, max_y // 2 - 3, "BALLISTIC PATH", curses.A_BOLD)
         _draw_centered(stdscr, max_y // 2 - 1, INTRO_DIALOGUE[line_index][:visible_chars])
         _draw_centered(stdscr, max_y // 2 + 2, f"{line_index + 1} / {len(INTRO_DIALOGUE)}")
@@ -93,6 +113,7 @@ def main(stdscr):
         # Render the frame, check if terminal is too small
         success = render_frame(stdscr, engine, color_pairs)
         if not success:
+            stdscr.timeout(50 * GAME_SPEED)
             key = stdscr.getch()
             if key in (ord('q'), ord('Q'), 27):
                 break
@@ -106,14 +127,20 @@ def main(stdscr):
             
         if engine.state == "LOSE":
             curses.beep()
-            stdscr.timeout(-1)
-            render_lose_screen(stdscr)
+            stdscr.timeout(50 * GAME_SPEED)
 
             while engine.state == "LOSE":
+                max_y, max_x = stdscr.getmaxyx()
+                if max_y < VIEWPORT_HEIGHT or max_x < VIEWPORT_WIDTH:
+                    render_resize_message(stdscr)
+                else:
+                    render_lose_screen(stdscr)
                 key = stdscr.getch()
                 if key in (ord('q'), ord('Q'), 27):
                     return
                 elif key in (10, 13, curses.KEY_ENTER):
+                    if max_y < VIEWPORT_HEIGHT or max_x < VIEWPORT_WIDTH:
+                        continue
                     engine.load_level(engine.level_id)  # Reload the current level
                     engine.state = "RUNNING"
                     stdscr.timeout(50 * GAME_SPEED)
