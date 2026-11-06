@@ -13,7 +13,8 @@
     { "id": "13", "type": "red_box", "x": 8, "y": 2 },
     { "id": "14", "type": "red_box", "x": 4, "y": 3 },
     { "id": "15", "type": "red_box", "x": 6, "y": 3 },
-    { "id": "16", "type": "red_box", "x": 0, "y": 3 },
+    { "id": "16", "type": "red_box", "x": 0, "y": 0 },
+    { "id": "17", "type": "red_box", "x": 1, "y": 6 },
 
     { "id": "99", "type": "target", "x": 8, "y": 1 }
   ]

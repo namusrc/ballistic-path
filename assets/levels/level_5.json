@@ -1,0 +1,42 @@
+{
+  "level_id": 5,
+  "is_last_level": true,
+  "name": "Spiral Maze",
+  "objects": [
+    { "id": "1", "type": "gun", "initial_angle": "south", "x": 11, "y": 5 },
+    { "id": "2", "type": "mirror", "initial_angle": "north", "x": 6, "y": 4 },
+    { "id": "3", "type": "mirror", "initial_angle": "north", "x": 1, "y": 3 },
+    { "id": "4", "type": "mirror", "initial_angle": "east", "x": 6, "y": 3 },
+    { "id": "5", "type": "mirror", "initial_angle": "east", "x": 7, "y": 6 },
+    { "id": "6", "type": "yellow_box", "x": 6, "y": 2 },
+    { "id": "7", "type": "yellow_box", "x": 9, "y": 3 },
+
+    { "id": "10", "type": "fragile_red_box", "x": 6, "y": 5 },
+    { "id": "11", "type": "fragile_red_box", "x": 6, "y": 0 },
+    { "id": "20", "type": "red_box", "x": 8, "y": 1 },
+    { "id": "21", "type": "red_box", "x": 8, "y": 3 },
+    { "id": "22", "type": "red_box", "x": 2, "y": 1 },
+    { "id": "23", "type": "red_box", "x": 4, "y": 1 },
+    { "id": "24", "type": "red_box", "x": 8, "y": 4 },
+    { "id": "25", "type": "red_box", "x": 10, "y": 4 },
+    { "id": "26", "type": "red_box", "x": 4, "y": 4 },
+    { "id": "27", "type": "red_box", "x": 4, "y": 6 },
+    { "id": "28", "type": "red_box", "x": 0, "y": 0 },
+    { "id": "29", "type": "red_box", "x": 0, "y": 2 },
+    { "id": "30", "type": "red_box", "x": 0, "y": 4 },
+    { "id": "31", "type": "red_box", "x": 0, "y": 6 },
+    { "id": "32", "type": "red_box", "x": 1, "y": 4 },
+    { "id": "33", "type": "red_box", "x": 1, "y": 6 },
+    { "id": "34", "type": "red_box", "x": 2, "y": 6 },
+    { "id": "35", "type": "red_box", "x": 3, "y": 6 },
+    { "id": "36", "type": "red_box", "x": 5, "y": 1 },
+    { "id": "37", "type": "red_box", "x": 5, "y": 6 },
+    { "id": "38", "type": "red_box", "x": 6, "y": 6 },
+    { "id": "39", "type": "red_box", "x": 10, "y": 0 },
+
+    { "id": "96", "type": "target", "x": 8, "y": 2 },
+    { "id": "97", "type": "target", "x": 3, "y": 1 },
+    { "id": "98", "type": "target", "x": 9, "y": 4 },
+    { "id": "99", "type": "target", "x": 4, "y": 5 }
+  ]
+}

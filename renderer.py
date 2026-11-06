@@ -76,7 +76,7 @@ def render_frame(stdscr, engine, color_pairs):
     offset_y = 1
     offset_x = 2
 
-    rectangle(stdscr, 1, 0, 22, 75)
+    rectangle(stdscr, 0, 0, 22, 75)
 
     # Render Object Instances
     for inst_id, obj in engine.objects.items():
