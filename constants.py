@@ -1,11 +1,9 @@
 """Defines constants used throughout the application."""
 
-import curses
-
 # Grid and Aspect Ratio Configuration
 # 12 horizontally and 7 vertically
 
-GAME_SPEED = 1
+GAME_SPEED = 10
 VIEWPORT_WIDTH = 80
 VIEWPORT_HEIGHT = 24
 

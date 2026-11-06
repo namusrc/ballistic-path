@@ -60,7 +60,7 @@ def run_dialogue(stdscr, lines, title="Bank Robbery"):
     elapsed_typing = 0.0
     last_update = time.monotonic()
     character_interval = 0.035
-    stdscr.timeout(50 * GAME_SPEED)
+    stdscr.timeout(5 * GAME_SPEED)
 
     while line_index < len(lines):
         now = time.monotonic()
@@ -128,7 +128,7 @@ def main(stdscr):
     engine.load_assets()
     engine.load_level()
     
-    stdscr.timeout(50 * GAME_SPEED)
+    stdscr.timeout(5 * GAME_SPEED)
     start_time = time.time()
 
     while True:
@@ -136,7 +136,7 @@ def main(stdscr):
         # Render the frame, check if terminal is too small
         success = render_frame(stdscr, engine, color_pairs)
         if not success:
-            stdscr.timeout(50 * GAME_SPEED)
+            stdscr.timeout(5 * GAME_SPEED)
             key = stdscr.getch()
             if key in (ord('q'), ord('Q'), 27):
                 break
@@ -150,7 +150,7 @@ def main(stdscr):
             
         if engine.state == "LOSE":
             curses.beep()
-            stdscr.timeout(50 * GAME_SPEED)
+            stdscr.timeout(5 * GAME_SPEED)
 
             while engine.state == "LOSE":
                 max_y, max_x = stdscr.getmaxyx()
@@ -166,7 +166,7 @@ def main(stdscr):
                         continue
                     engine.load_level(engine.level_id)  # Reload the current level
                     engine.state = "RUNNING"
-                    stdscr.timeout(50 * GAME_SPEED)
+                    stdscr.timeout(5 * GAME_SPEED)
                     break
 
         # Input Processing
@@ -196,7 +196,7 @@ def main(stdscr):
                 if dialogue and not run_dialogue(stdscr, dialogue, "BETWEEN LEVELS"):
                     return
                 engine.load_next_level()
-                stdscr.timeout(50 * GAME_SPEED)
+                stdscr.timeout(5 * GAME_SPEED)
         else:
             try:
                 char_key = chr(key)
