@@ -15,29 +15,30 @@ import time
 
 
 INTRO_DIALOGUE = (
-    "After hours of thinking, I literally have no idea how to make a bank robbery story without making it sound too cliche.",
-    "What is wrong with my life?",
-    "I should've known that we needed a story in this project. I should have been more careful.",
-    "Can I get a good grade for this course?",
-    "What happens if I can't even graduate? How will I make a living? How will I survive? How will I pay for my rent?",
-    "The answer is simple. I will just have to rob a bank.",
-    "Practice makes perfet. Let's practice robbing a bank!"
+    "Midnight, Level 67, THE Vault",
+    "King: Listen up, we have one chance, make it count.",
+    "King: One shot per gun, every lock must break.",
+    "King: The old mirrors will help you.",
+    "King: Use them wisely.",
+    "King: Hey ... be careful.",
     
 )
 
 LEVEL_DIALOGUES = {
     1: (
-        "That shot actually worked.",
-        "Maybe this could be my profession.",
-        "Let's try something different"
+        "King: Nice first door down.",
+        "King: Keep doing that and you'll be rich.",
     ),
     2: (
-        "Another target down. It's just like studying maths",
-        "Except that it actually gives you money",
+        "King: Not bad, not bad at all.",
+        "King: You're a natural at this.",
     ),
     3: (
-        "Almost there. I'm almost ready to rob HSBC",
-        "I'll be rich.",
+        "King: Hurry up, not much time left.",
+    ),
+    4: (
+        "King: You dont need me from here on out.",
+        "King: See you on the other side.",
     ),
 }
 
