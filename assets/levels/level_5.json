@@ -1,6 +1,5 @@
 {
   "level_id": 5,
-  "is_last_level": true,
   "name": "Spiral Maze",
   "objects": [
     { "id": "1", "type": "gun", "initial_angle": "south", "x": 11, "y": 5 },

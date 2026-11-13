@@ -1,5 +1,6 @@
 {
   "level_id": 6,
+  "is_last_level": true,
   "name": "Hall of Mirrors",
   "objects": [
     { "id": "1", "type": "gun", "initial_angle": "north", "x": 11, "y": 1 },
