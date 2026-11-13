@@ -93,5 +93,35 @@ while True:
 
 </details>
 
+### Yasasvi Bandi (30 Oct 2026)
+- **Tool and model/version:** Claude
+- **Purpose:** Add code to [constants.py](constants.py) design the YOU WIN and the YOU LOOSE screen graphic.
+- **Substantial parts affected (files/materials):** [renderer.py](renderer.py), line 21-36
+- **What was kept, changed, or rejected, and how results were checked (tests or corrections):** The generated graphics were tested on a seperate terminal, then was coded into the project.
+
+'''python
+ WIN_TEXT = [
+        "█   █   ███   █   █    █   █  ███  █   █",
+        " █ █   █   █  █   █    █   █   █   ██  █",
+        "  █    █   █  █   █    █ █ █   █   █ █ █",
+        "  █    █   █  █   █    ██ ██   █   █  ██",
+        "  █     ███    ███     █   █  ███  █   █",
+]
+
+LOSE_TEXT = [
+        "█   █   ███   █   █    █       ███    ████  █████",
+        " █ █   █   █  █   █    █      █   █  █      █    ",
+        "  █    █   █  █   █    █      █   █   ███   ████ ",
+        "  █    █   █  █   █    █      █   █      █  █    ",
+        "  █     ███    ███     █████   ███   ████   █████",
+]
+'''
+
+### Yasasvi Bandi (6 Nov 2026)
+- **Tool and model/version:** Claude
+- **Purpose:** Add code to [levels](levels) design the YOU WIN and the YOU LOOSE screen graphic.
+- **Substantial parts affected (files/materials):** [renderer.py](renderer.py) levels 4,5,6
+- **What was kept, changed, or rejected, and how results were checked (tests or corrections):** The generated levels were trailed to make sure all the mechanics would still work. Some extra elements were added on top of the AI generated to make the levels even more challenging. 
+
 ## Footnotes
 [^1]: This bug comes from commit cfa90f99. Bullet reflection did not work properly because collision detection system detected bullet's collision with mirror multiple times, which caused a reflection to non-indented direction. To learn more about the bug, you may refer to: [Buggy reflection mechanism 1](docs/tests/test_6060e7d7_0.gif), [Buggy reflection mechanism 2](docs/tests/test_6060e7d7_1.gif), [Working reflection mechanism after the fix 1](docs/tests/test_b99cc1b8_0.gif), [Working reflection mechanism after the fix 2](docs/tests/test_b99cc1b8_1.gif)
