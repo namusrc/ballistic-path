@@ -123,5 +123,36 @@ LOSE_TEXT = [
 - **Substantial parts affected (files/materials):** [renderer.py](renderer.py) levels 4,5,6
 - **What was kept, changed, or rejected, and how results were checked (tests or corrections):** The generated levels were trailed to make sure all the mechanics would still work. Some extra elements were added on top of the AI generated to make the levels even more challenging. 
 
+### Ether Liang (14 Nov 2026)
+- **Tool and model/version:** Cursor, Grok 4.7
+- **Purpose:** Fix the Docker case were a terminal smaller than 80 x 24 still drew the game. The existing resize notice in [renderer.py](renderer.py) was kept. AI added code so curses follows the real terminal size and that notice is shown.
+- **Substantial parts affected (files/materials):** [main.py](main.py), lines 15-19 and the size checks in the dialogue, game, and lose loops; [renderer.py](renderer.py), `sync_terminal_size`, lines 44-60, called from `render_frame` at line 90
+- **What was kept, change, or rejected, and how results were checked (tests or corrections):** The "Terminal too small" message and the 80 x 24 check were kept. `curses.resizeterm(0, 0)` together with curses.update_lines_cols()` was replaced, because with `LINES` and `COLUMNS` set it kept the old size. The new code clears those variables before curses starts, then reads the real terminal size on each refresh. Checked in a small terminal: with `LINES` and `COLUMNS` larger than the window, the resize notice appeared; at 80 x 24 the game dialogue still appeared; shrinking and enlarging the window switched between the notic and the game.
+
+<details>
+<summary>Click to view the corresponding code</summary>
+
+```python
+# main.py, before curses starts
+os.environ.pop("COLUMNS", None)
+os.environ.pop("LINES", None)
+curses.use_env(False)
+
+# renderer.py
+def sync_terminal_size(stdscr):
+    try:
+        actual = os.get_terminal_size(sys.stdin.fileno())
+    except OSError:
+        return
+    size = (max(1, actual.lines), max(1, actual.columns))
+    if size != stdscr.getmaxyx():
+        try:
+            curses.resizeterm(*size)
+        except curses.error:
+            pass
+```
+
+</details>
+
 ## Footnotes
 [^1]: This bug comes from commit cfa90f99. Bullet reflection did not work properly because collision detection system detected bullet's collision with mirror multiple times, which caused a reflection to non-indented direction. To learn more about the bug, you may refer to: [Buggy reflection mechanism 1](docs/tests/test_6060e7d7_0.gif), [Buggy reflection mechanism 2](docs/tests/test_6060e7d7_1.gif), [Working reflection mechanism after the fix 1](docs/tests/test_b99cc1b8_0.gif), [Working reflection mechanism after the fix 2](docs/tests/test_b99cc1b8_1.gif)

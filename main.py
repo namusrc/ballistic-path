@@ -1,4 +1,5 @@
 import curses
+import os
 from engine import GameEngine
 from renderer import (
     init_colors,
@@ -6,9 +7,16 @@ from renderer import (
     render_lose_screen,
     render_resize_message,
     render_win_screen,
+    sync_terminal_size,
 )
 from constants import GAME_SPEED, VIEWPORT_HEIGHT, VIEWPORT_WIDTH
 import time
+
+# Docker images often pin COLUMNS and LINES. ncurses treats those as the real
+# window, so this has to happen before curses.wrapper() calls initscr().
+os.environ.pop("COLUMNS", None)
+os.environ.pop("LINES", None)
+curses.use_env(False)
 
 # IMPORTANT. WATCH.
 # https://www.youtube.com/watch?v=oHg5SJYRHA0
@@ -65,10 +73,17 @@ def run_dialogue(stdscr, lines, title="Bank Robbery"):
 
     while line_index < len(lines):
         now = time.monotonic()
+        sync_terminal_size(stdscr)
         max_y, max_x = stdscr.getmaxyx()
         if max_y < VIEWPORT_HEIGHT or max_x < VIEWPORT_WIDTH:
             render_resize_message(stdscr)
             key = stdscr.getch()
+
+            if key == curses.KEY_RESIZE:
+                sync_terminal_size(stdscr)
+                stdscr.clear()
+                stdscr.touchwin()
+                continue
             if key in (ord("q"), ord("Q"), 27):
                 return False
             last_update = time.monotonic()
@@ -98,6 +113,11 @@ def run_dialogue(stdscr, lines, title="Bank Robbery"):
         stdscr.refresh()
 
         key = stdscr.getch()
+        if key == curses.KEY_RESIZE:
+            sync_terminal_size(stdscr)
+            stdscr.clear()
+            stdscr.touchwin()
+            continue
         if key in (ord("q"), ord("Q"), 27):
             return False
         if key in (10, 13, curses.KEY_ENTER):
@@ -139,6 +159,11 @@ def main(stdscr):
         if not success:
             stdscr.timeout(5 * GAME_SPEED)
             key = stdscr.getch()
+            if key == curses.KEY_RESIZE:
+                sync_terminal_size(stdscr)
+                stdscr.clear()
+                stdscr.touchwin()
+                continue
             if key in (ord('q'), ord('Q'), 27):
                 break
             continue
@@ -154,12 +179,18 @@ def main(stdscr):
             stdscr.timeout(5 * GAME_SPEED)
 
             while engine.state == "LOSE":
+                sync_terminal_size(stdscr)
                 max_y, max_x = stdscr.getmaxyx()
                 if max_y < VIEWPORT_HEIGHT or max_x < VIEWPORT_WIDTH:
                     render_resize_message(stdscr)
                 else:
                     render_lose_screen(stdscr)
                 key = stdscr.getch()
+                if key == curses.KEY_RESIZE:
+                    sync_terminal_size(stdscr)
+                    stdscr.clear()
+                    stdscr.touchwin()
+                    continue
                 if key in (ord('q'), ord('Q'), 27):
                     return
                 elif key in (10, 13, curses.KEY_ENTER):
@@ -172,6 +203,11 @@ def main(stdscr):
 
         # Input Processing
         key = stdscr.getch()
+        if key == curses.KEY_RESIZE:
+            sync_terminal_size(stdscr)
+            stdscr.clear()
+            stdscr.touchwin()
+            continue
 
         if key in (ord('q'), ord('Q'), 27):  # Q or ESC
             break

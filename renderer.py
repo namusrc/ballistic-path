@@ -1,4 +1,6 @@
 import curses
+import os
+import sys
 from curses.textpad import rectangle
 from textwrap import wrap
 from constants import (
@@ -39,6 +41,25 @@ def init_colors():
     return color_pairs
 
 
+def sync_terminal_size(stdscr):
+    """Make curses follow the real PTY size.
+
+    Containers often export COLUMNS and LINES and do not deliver SIGWINCH.
+    stdscr.getmaxyx() then stays at that fixed size, so a smaller window still
+    draws the game instead of the resize notice.
+    """
+    try:
+        actual = os.get_terminal_size(sys.stdin.fileno())
+    except OSError:
+        return
+    size = (max(1, actual.lines), max(1, actual.columns))
+    if size != stdscr.getmaxyx():
+        try:
+            curses.resizeterm(*size)
+        except curses.error:
+            pass
+
+
 def render_resize_message(stdscr):
     stdscr.erase()
     max_y, max_x = stdscr.getmaxyx()
@@ -66,6 +87,7 @@ def render_resize_message(stdscr):
 
 
 def render_frame(stdscr, engine, color_pairs):
+    sync_terminal_size(stdscr)
     stdscr.erase()
     max_y, max_x = stdscr.getmaxyx()
 
