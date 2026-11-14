@@ -312,7 +312,7 @@ class GameEngine:
 
 def trigger_lose(self):
     self.state = "LOSE"
-    self.status_msg = "You have been defeated! Press 'n' to restart the level."
+    self.status_msg = "You have been defeated! Press ENTER to restart the level."
 
 def trigger_win(self):
     self.state = "WIN"
