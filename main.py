@@ -21,6 +21,16 @@ curses.use_env(False)
 # IMPORTANT. WATCH.
 # https://www.youtube.com/watch?v=oHg5SJYRHA0
 
+"""
+The failure happens because the program doesn't look at the terminal right in front of you, but at the size Docker wrote into the environment variables. The window is actually smaller than 80×24, but the check thinks it's big enough, so the game keeps drawing, and the 'Terminal too small' in renderer.py won’t show up.
+
+Both main.py and render_frame compare stdscr.getmaxyx() with 80×24. Curses by default trusts LINES and COLUMNS. In containers, these two values are often set to a fixed large size, and when the window shrinks, the process often doesn’t get SIGWINCH. So getmaxyx() keeps returning the rows and columns from when it started—for example, 40 rows, 120 columns—the check says 'big enough,' and the game UI draws as usual, just clipped by the small window.
+
+The original adjustment handling doesn’t help either. After receiving KEY_RESIZE, the code calls curses.resizeterm(0, 0) and curses.update_lines_cols(), which again read LINES and COLUMNS, pulling the size back to the value from the environment variables.
+    
+"""
+
+
 
 INTRO_DIALOGUE = (
     "Midnight, Level 67, THE Vault",
