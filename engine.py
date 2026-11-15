@@ -133,12 +133,12 @@ class GameEngine:
         if selected_object.object_type.type_id == "gun":
             if (0 < new_x < GRID_COLS-1 and 0 < new_y < GRID_ROWS-1) or \
                 (new_x < 0 or new_x > GRID_COLS-1 or new_y < 0 or new_y > GRID_ROWS-1):
-                self.status_msg = f"[BLOCKED] Hit grid boundary at ({new_x}, {new_y})"
+                self.status_msg = f"[BLOCKED] Hit boundary at ({new_x}, {new_y})"
                 return
             
         elif selected_object.object_type.type_id != "gun":
             if (new_x < 0 or new_x > GRID_COLS-1 or new_y < 0 or new_y > GRID_ROWS-1):
-                self.status_msg = f"[BLOCKED] Hit grid boundary at ({new_x}, {new_y})"
+                self.status_msg = f"[BLOCKED] Hit boundary at ({new_x}, {new_y})"
                 return
 
         # Let's make the gun rotatable and let other objects in the outer ring.
@@ -264,7 +264,7 @@ class GameEngine:
             hit_obstacle = False
 
             if not (0 <= current_grid_x < GRID_COLS and 0 <= current_grid_y < GRID_ROWS):
-                self.status_msg = f"[BLOCKED] Hit grid boundary at ({current_grid_x}, {current_grid_y}"
+                self.status_msg = f"[BLOCKED] Hit boundary at ({current_grid_x}, {current_grid_y})"
                 hit_obstacle = True
                 continue
 
