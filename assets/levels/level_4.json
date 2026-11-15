@@ -1,6 +1,10 @@
 {
   "level_id": 4,
   "name": "Level 4: damn ur good",
+  "dialogue": [
+    "King: You dont need me from here on out.",
+    "King: See you on the other side."
+  ],
   "objects": [
     { "id": "1", "type": "gun", "initial_angle": "east", "x": 0, "y": 4 },
     { "id": "2", "type": "yellow_box", "x": 1, "y": 5 },

@@ -1,6 +1,10 @@
 {
   "level_id": 1,
   "name": "Level 1: Yo",
+  "dialogue": [
+    "King: Nice first door down.",
+    "King: Keep doing that and you'll be rich."
+  ],
   "objects": [
     { "id": "1", "type": "gun", "initial_angle": "north", "x": 0, "y": 3 },
     { "id": "2", "type": "yellow_box", "x": 5, "y": 3 },

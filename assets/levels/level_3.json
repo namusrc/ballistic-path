@@ -1,6 +1,9 @@
 {
   "level_id": 3,
   "name": "Level 3: Good luck with this",
+  "dialogue": [
+    "King: Hurry up, not much time left."
+  ],
   "objects": [
     { "id": "1", "type": "gun", "initial_angle": "east", "x": 0, "y": 5 },
     { "id": "2", "type": "mirror", "initial_angle": "north", "x": 3, "y": 3 },

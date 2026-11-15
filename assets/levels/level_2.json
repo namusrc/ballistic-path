@@ -1,6 +1,10 @@
 {
   "level_id": 2,
   "name": "Level 2: It works",
+  "dialogue": [
+    "King: Not bad, not bad at all.",
+    "King: You're a natural at this."
+  ],
   "objects": [
     { "id": "1", "type": "gun", "initial_angle": "south", "x": 2, "y": 0 },
     { "id": "2", "type": "mirror", "initial_angle": "east", "x": 4, "y": 5 },

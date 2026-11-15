@@ -1,5 +1,7 @@
 import curses
+import json
 import os
+from pathlib import Path
 from engine import GameEngine
 from renderer import (
     init_colors,
@@ -20,35 +22,6 @@ curses.use_env(False)
 
 # IMPORTANT. WATCH.
 # https://www.youtube.com/watch?v=oHg5SJYRHA0
-
-INTRO_DIALOGUE = (
-    "Midnight, Level 67, THE Vault",
-    "King: Listen up, we have one chance, make it count.",
-    "King: One shot per gun, every lock must break.",
-    "King: The old mirrors will help you.",
-    "King: Use them wisely.",
-    "King: Hey ... be careful.",
-    
-)
-
-LEVEL_DIALOGUES = {
-    1: (
-        "King: Nice first door down.",
-        "King: Keep doing that and you'll be rich.",
-    ),
-    2: (
-        "King: Not bad, not bad at all.",
-        "King: You're a natural at this.",
-    ),
-    3: (
-        "King: Hurry up, not much time left.",
-    ),
-    4: (
-        "King: You dont need me from here on out.",
-        "King: See you on the other side.",
-    ),
-}
-
 
 def _draw_centered(stdscr, y, text, attr=0):
     max_y, max_x = stdscr.getmaxyx()
@@ -132,7 +105,10 @@ def run_dialogue(stdscr, lines, title="Bank Robbery"):
 
 
 def run_intro_dialogue(stdscr):
-    return run_dialogue(stdscr, INTRO_DIALOGUE)
+    dialogue_data = json.loads(
+        Path("assets/dialogue.json").read_text(encoding="utf-8")
+    )
+    return run_dialogue(stdscr, dialogue_data["intro"])
 
 
 def main(stdscr):
@@ -228,7 +204,7 @@ def main(stdscr):
             engine.state = "LEVEL_COMPLETE"
         elif key in (10, 13, curses.KEY_ENTER):
             if engine.state == "LEVEL_COMPLETE":
-                dialogue = LEVEL_DIALOGUES.get(engine.level_id)
+                dialogue = engine.level_dialogue
                 if dialogue and not run_dialogue(stdscr, dialogue, "BETWEEN LEVELS"):
                     return
                 engine.load_next_level()

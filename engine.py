@@ -15,6 +15,7 @@ class GameEngine:
         self.status_msg = "Use 0-9 to select object | WASD to move | F to shoot | Q to quit"
         self.state = "RUNNING"  # could be "RUNNING", "LEVEL_COMPLETE", "WIN", "LOSE"
         self.level_id = 1
+        self.level_dialogue = ()
 
     def load_assets(self):
         objects_dir = Path("assets/objects")
@@ -46,6 +47,7 @@ class GameEngine:
 
         self.level_id = level_data.get("level_id")
         self.is_last_level = level_data.get("is_last_level", False)
+        self.level_dialogue = level_data.get("dialogue", ())
         for item in level_data.get("objects", []):
             instance_id = str(item["id"])
             type_id = item["type"]
@@ -316,4 +318,4 @@ def trigger_lose(self):
 
 def trigger_win(self):
     self.state = "WIN"
-    self.status_msg = "All targets destroyed! Press ENTER to proceed to the next level."
+    self.status_msg = "All targets destroyed! Press ENTER to proceed."
