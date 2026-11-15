@@ -200,8 +200,8 @@ def main(stdscr):
             engine.shoot()
         elif key == ord('?'):
             engine.debug()
-        elif key == ord('n'): # Debug purpose: Skip to next level. Delete before releasing.
-            engine.state = "LEVEL_COMPLETE"
+        # elif key == ord('n'): # Debug purpose: Skip to next level. Delete before releasing.
+        #     engine.state = "LEVEL_COMPLETE"
         elif key in (10, 13, curses.KEY_ENTER):
             if engine.state == "LEVEL_COMPLETE":
                 dialogue = engine.level_dialogue
