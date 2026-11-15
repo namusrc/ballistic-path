@@ -18,6 +18,8 @@
     { "id": "11", "type": "red_box", "x": 3, "y": 3 },
     { "id": "12", "type": "fragile_red_box", "x": 11, "y": 3 },
     { "id": "13", "type": "fragile_red_box", "x": 1, "y": 2 },
+    { "id": "14", "type": "fixed_mirror", "x": 4, "y": 1 },
+    { "id": "15", "type": "fragile_fixed_mirror", "x": 5, "y": 1 },
 
     { "id": "98", "type": "target", "x": 3, "y": 2 },
     { "id": "99", "type": "target", "x": 4, "y": 4 }
