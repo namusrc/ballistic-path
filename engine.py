@@ -265,8 +265,12 @@ class GameEngine:
 
             if not (0 <= current_grid_x < GRID_COLS and 0 <= current_grid_y < GRID_ROWS):
                 self.status_msg = f"[BLOCKED] Hit boundary at ({current_grid_x}, {current_grid_y})"
-                hit_obstacle = True
-                continue
+                if any(
+                    obj.object_type.type_id == "target"
+                    for obj in self.objects.values()
+                ):
+                    trigger_lose(self)
+                    continue
 
             
             
@@ -317,7 +321,9 @@ class GameEngine:
                         hit_obstacle = True
                         break  # Stop checking other objects
 
-            if hit_obstacle:
+            if hit_obstacle and any(
+                obj.object_type.type_id == "target" for obj in self.objects.values()
+            ):
                 trigger_lose(self)
                 continue
 
