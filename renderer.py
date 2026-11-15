@@ -42,12 +42,12 @@ def init_colors():
 
 
 def sync_terminal_size(stdscr):
-    """Make curses follow the real PTY size.
+    # Make curses follow the real PTY size.
 
-    Containers often export COLUMNS and LINES and do not deliver SIGWINCH.
-    stdscr.getmaxyx() then stays at that fixed size, so a smaller window still
-    draws the game instead of the resize notice.
-    """
+    # Containers often export COLUMNS and LINES and do not deliver SIGWINCH.
+    # stdscr.getmaxyx() then stays at that fixed size, so a smaller window still
+    # draws the game instead of the resize notice.
+    
     try:
         actual = os.get_terminal_size(sys.stdin.fileno())
     except OSError:
@@ -160,7 +160,8 @@ def render_frame(stdscr, engine, color_pairs):
     # Header and Status Bar
     try:
         active_ids = sorted(engine.objects.keys())
-        header_str = f" Selected: Object [{engine.selected_id}] | Active Objects: {active_ids} "
+        selected_name = engine.objects[engine.selected_id].object_type.name if engine.selected_id in engine.objects else "Unknown"
+        header_str = f" Selected: {selected_name} [{engine.selected_id}]"
         stdscr.addnstr(0, 2, header_str, VIEWPORT_WIDTH - 3, curses.A_REVERSE)
         stdscr.addnstr(VIEWPORT_HEIGHT - 1, 2, engine.status_msg, VIEWPORT_WIDTH - 3)
     except curses.error:

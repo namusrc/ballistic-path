@@ -301,7 +301,7 @@ class GameEngine:
                 continue
 
             if not any(obj.object_type.type_id == "target" for obj in self.objects.values()): # If no targets left, level complete
-                self.status_msg = "All targets destroyed! Level Complete! Press ENTER to proceed to the next level."
+                self.status_msg = "All targets destroyed! Level Complete! Press ENTER to proceed."
                 if self.is_last_level:
                     trigger_win(self)
                 else:
