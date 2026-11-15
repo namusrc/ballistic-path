@@ -1,8 +1,12 @@
 {
   "level_id": 3,
   "name": "Level 3: Good luck with this",
+  "next_level": 4,
   "dialogue": [
-    "King: Hurry up, not much time left."
+    "King: Hurry up, not much time left.",
+    "King: On the next floor, there is cyan alarm relay.",
+    "King: Break it to reach the main vault,",
+    "King: or leave it intact and take the service corridor."
   ],
   "objects": [
     { "id": "1", "type": "gun", "initial_angle": "east", "x": 0, "y": 5 },

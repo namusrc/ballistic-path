@@ -207,7 +207,13 @@ def main(stdscr):
                 dialogue = engine.level_dialogue
                 if dialogue and not run_dialogue(stdscr, dialogue, "BETWEEN LEVELS"):
                     return
-                engine.load_next_level()
+                if engine.load_next_level():
+                    if engine.entry_dialogue and not run_dialogue(
+                        stdscr,
+                        engine.entry_dialogue,
+                        "NEW ROUTE",
+                    ):
+                        return
                 stdscr.timeout(5 * GAME_SPEED)
         else:
             try:

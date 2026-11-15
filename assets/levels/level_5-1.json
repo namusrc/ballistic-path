@@ -1,6 +1,11 @@
 {
-  "level_id": 5,
-  "name": "Spiral Maze",
+  "level_id": "5-1",
+  "name": "Level 5-1: Spiral Maze",
+  "next_level": 6,
+  "entry_dialogue": [
+    "King: The relay is down. The main vault is exposed.",
+    "King: But this mirror maze still guards the inner lock."
+  ],
   "objects": [
     { "id": "1", "type": "gun", "initial_angle": "south", "x": 11, "y": 5 },
     { "id": "2", "type": "mirror", "initial_angle": "north", "x": 6, "y": 4 },
@@ -10,8 +15,8 @@
     { "id": "6", "type": "yellow_box", "x": 6, "y": 2 },
     { "id": "7", "type": "yellow_box", "x": 9, "y": 3 },
 
-    { "id": "10", "type": "fragile_red_box", "x": 6, "y": 5 },
-    { "id": "11", "type": "fragile_red_box", "x": 6, "y": 0 },
+    { "id": "10", "type": "fragile_cyan_box", "x": 6, "y": 5 },
+    { "id": "11", "type": "fragile_cyan_box", "x": 6, "y": 0 },
     { "id": "20", "type": "red_box", "x": 8, "y": 1 },
     { "id": "21", "type": "red_box", "x": 8, "y": 3 },
     { "id": "22", "type": "red_box", "x": 2, "y": 1 },

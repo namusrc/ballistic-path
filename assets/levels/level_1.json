@@ -1,6 +1,7 @@
 {
   "level_id": 1,
   "name": "Level 1: Yo",
+  "next_level": 2,
   "dialogue": [
     "King: Nice first door down.",
     "King: Keep doing that and you'll be rich."

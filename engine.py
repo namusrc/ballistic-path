@@ -16,6 +16,10 @@ class GameEngine:
         self.state = "RUNNING"  # could be "RUNNING", "LEVEL_COMPLETE", "WIN", "LOSE"
         self.level_id = 1
         self.level_dialogue = ()
+        self.entry_dialogue = ()
+        self.next_level_id = None
+        self.branch_on_destroyed = None
+        self.destroyed_object_ids = set()
 
     def load_assets(self):
         objects_dir = Path("assets/objects")
@@ -33,7 +37,8 @@ class GameEngine:
         if level is None:
             level = self.level_id
 
-        level_file = Path(f"assets/levels/level_{level}.json")
+        level_file_id = "5-1" if level == 5 else level
+        level_file = Path(f"assets/levels/level_{level_file_id}.json")
 
         # Load Level Data
         if not level_file.exists():
@@ -42,12 +47,16 @@ class GameEngine:
         self.objects.clear()
         self.bullets.clear()
         self.selected_id = None
+        self.destroyed_object_ids.clear()
         self.state = "RUNNING"
         level_data = json.loads(level_file.read_text(encoding="utf-8"))
 
         self.level_id = level_data.get("level_id")
         self.is_last_level = level_data.get("is_last_level", False)
         self.level_dialogue = level_data.get("dialogue", ())
+        self.entry_dialogue = level_data.get("entry_dialogue", ())
+        self.next_level_id = level_data.get("next_level")
+        self.branch_on_destroyed = level_data.get("branch_on_destroyed")
         for item in level_data.get("objects", []):
             instance_id = str(item["id"])
             type_id = item["type"]
@@ -83,11 +92,22 @@ class GameEngine:
         self.load_level(0)
 
     def load_next_level(self):
-        level_number = self.level_id + 1
-        try:
-            self.load_level(level_number)
-        except FileNotFoundError:
+        next_level = self.next_level_id
+        if self.branch_on_destroyed:
+            branch = self.branch_on_destroyed
+            object_id = str(branch["object_id"])
+            branch_key = (
+                "destroyed"
+                if object_id in self.destroyed_object_ids
+                else "preserved"
+            )
+            next_level = branch[branch_key]
+
+        if next_level is None:
             return False
+
+        self.load_level(next_level)
+        return True
 
     def try_move(self, dx, dy):
         if self.bullets:
@@ -279,6 +299,7 @@ class GameEngine:
                             bullet.dx, bullet.dy = reflection_map[original_direction]
                     # Destruction of target or fragile object
                     if other_obj.object_type.is_fragile:
+                        self.destroyed_object_ids.add(other_id)
                         if other_obj.object_type.type_id == "target":
                             self.status_msg = f"[HIT] Target [{other_id}] destroyed!"
                             del self.objects[other_id]

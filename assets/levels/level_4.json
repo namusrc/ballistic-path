@@ -1,9 +1,13 @@
 {
   "level_id": 4,
   "name": "Level 4: damn ur good",
+  "branch_on_destroyed": {
+    "object_id": "10",
+    "destroyed": "5-1",
+    "preserved": "5-2"
+  },
   "dialogue": [
-    "King: You dont need me from here on out.",
-    "King: See you on the other side."
+    "King: Good work. I'll stay on comms until we meet again."
   ],
   "objects": [
     { "id": "1", "type": "gun", "initial_angle": "east", "x": 0, "y": 4 },
@@ -12,7 +16,7 @@
     { "id": "4", "type": "mirror", "initial_angle": "north", "x": 8, "y": 2 },
     { "id": "5", "type": "mirror", "initial_angle": "east", "x": 11, "y": 2 },
 
-    { "id": "10", "type": "fragile_red_box", "x": 2, "y": 5 },
+    { "id": "10", "type": "fragile_cyan_box", "x": 2, "y": 5 },
     { "id": "11", "type": "red_box", "x": 3, "y": 3 },
     { "id": "12", "type": "red_box", "x": 4, "y": 3 },
     { "id": "13", "type": "red_box", "x": 8, "y": 3 },

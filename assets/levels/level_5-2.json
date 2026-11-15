@@ -1,0 +1,36 @@
+{
+  "level_id": "5-2",
+  "name": "Level 5-2: Service Corridor",
+  "next_level": 6,
+  "entry_dialogue": [
+    "King: The relay is still active, so the main vault stayed sealed.",
+    "King: This corridor leads to its backup lock."
+  ],
+  "objects": [
+    { "id": "1", "type": "gun", "initial_angle": "east", "x": 0, "y": 3 },
+    { "id": "2", "type": "mirror", "initial_angle": "west", "x": 3, "y": 3 },
+    { "id": "3", "type": "mirror", "initial_angle": "west", "x": 3, "y": 6 },
+    { "id": "4", "type": "mirror", "initial_angle": "north", "x": 11, "y": 6 },
+    { "id": "5", "type": "mirror", "initial_angle": "east", "x": 11, "y": 2 },
+    { "id": "6", "type": "mirror", "initial_angle": "east", "x": 7, "y": 2 },
+    { "id": "7", "type": "mirror", "initial_angle": "north", "x": 7, "y": 0 },
+
+    { "id": "10", "type": "red_box", "x": 3, "y": 1 },
+    { "id": "11", "type": "red_box", "x": 1, "y": 6 },
+    { "id": "12", "type": "red_box", "x": 7, "y": 4 },
+    { "id": "13", "type": "red_box", "x": 5, "y": 0 },
+    { "id": "14", "type": "red_box", "x": 1, "y": 2 },
+    { "id": "15", "type": "red_box", "x": 2, "y": 4 },
+    { "id": "16", "type": "red_box", "x": 5, "y": 3 },
+    { "id": "17", "type": "red_box", "x": 8, "y": 5 },
+
+    { "id": "90", "type": "target", "x": 3, "y": 4 },
+    { "id": "91", "type": "target", "x": 3, "y": 5 },
+    { "id": "92", "type": "target", "x": 5, "y": 6 },
+    { "id": "93", "type": "target", "x": 8, "y": 6 },
+    { "id": "94", "type": "target", "x": 11, "y": 4 },
+    { "id": "95", "type": "target", "x": 9, "y": 2 },
+    { "id": "96", "type": "target", "x": 7, "y": 1 },
+    { "id": "97", "type": "target", "x": 9, "y": 0 }
+  ]
+}

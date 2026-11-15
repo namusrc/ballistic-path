@@ -2,6 +2,10 @@
   "level_id": 6,
   "is_last_level": true,
   "name": "Hall of Mirrors",
+  "entry_dialogue": [
+    "...",
+    "I think this is the last floor. I can feel it."
+  ],
   "objects": [
     { "id": "1", "type": "gun", "initial_angle": "north", "x": 11, "y": 1 },
     { "id": "2", "type": "gun", "initial_angle": "west", "x": 9, "y": 0 },
