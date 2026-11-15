@@ -99,8 +99,11 @@ while True:
 - **Substantial parts affected (files/materials):** [renderer.py](renderer.py), line 21-36
 - **What was kept, changed, or rejected, and how results were checked (tests or corrections):** The generated graphics were tested on a seperate terminal, then was coded into the project.
 
-'''python
- WIN_TEXT = [
+<details>
+<summary>Click to view the corresponding code</summary>
+
+```python
+WIN_TEXT = [
         "█   █   ███   █   █    █   █  ███  █   █",
         " █ █   █   █  █   █    █   █   █   ██  █",
         "  █    █   █  █   █    █ █ █   █   █ █ █",
@@ -115,19 +118,21 @@ LOSE_TEXT = [
         "  █    █   █  █   █    █      █   █      █  █    ",
         "  █     ███    ███     █████   ███   ████   █████",
 ]
-'''
+```
+
+</details>
 
 ### Yasasvi Bandi (6 Nov 2026)
 - **Tool and model/version:** Claude
-- **Purpose:** Add code to [levels](levels) design the YOU WIN and the YOU LOOSE screen graphic.
-- **Substantial parts affected (files/materials):** [renderer.py](renderer.py) levels 4,5,6
+- **Purpose:** Add code to *levels* folder, to add subsequent, challenging levels.
+- **Substantial parts affected (files/materials):** [renderer.py](renderer.py) levels 4, 5, and 6
 - **What was kept, changed, or rejected, and how results were checked (tests or corrections):** The generated levels were trailed to make sure all the mechanics would still work. Some extra elements were added on top of the AI generated to make the levels even more challenging. 
 
 ### Ether Liang (14 Nov 2026)
 - **Tool and model/version:** Cursor, Grok 4.7
 - **Purpose:** Fix the Docker case were a terminal smaller than 80 x 24 still drew the game. The existing resize notice in [renderer.py](renderer.py) was kept. AI added code so curses follows the real terminal size and that notice is shown.
 - **Substantial parts affected (files/materials):** [main.py](main.py), lines 15-19 and the size checks in the dialogue, game, and lose loops; [renderer.py](renderer.py), `sync_terminal_size`, lines 44-60, called from `render_frame` at line 90
-- **What was kept, change, or rejected, and how results were checked (tests or corrections):** The "Terminal too small" message and the 80 x 24 check were kept. `curses.resizeterm(0, 0)` together with curses.update_lines_cols()` was replaced, because with `LINES` and `COLUMNS` set it kept the old size. The new code clears those variables before curses starts, then reads the real terminal size on each refresh. Checked in a small terminal: with `LINES` and `COLUMNS` larger than the window, the resize notice appeared; at 80 x 24 the game dialogue still appeared; shrinking and enlarging the window switched between the notic and the game.
+- **What was kept, change, or rejected, and how results were checked (tests or corrections):** The "Terminal too small" message and the 80 x 24 check were kept. `curses.resizeterm(0, 0)`together with `curses.update_lines_cols()` was replaced, because with `LINES` and `COLUMNS` set it kept the old size. The new code clears those variables before curses starts, then reads the real terminal size on each refresh. Checked in a small terminal: with `LINES` and `COLUMNS` larger than the window, the resize notice appeared; at 80 x 24 the game dialogue still appeared; shrinking and enlarging the window switched between the notic and the game.
 
 <details>
 <summary>Click to view the corresponding code</summary>
