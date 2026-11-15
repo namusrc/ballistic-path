@@ -2,7 +2,7 @@
 
 **Welcome to Ballistic Path!**
 
-This is a Python puzzle game that turns a midnight vault heist into a test of aim and ingenuity. Guided by King, you’re sent into the vault with a simple warning: every gun gets one shot, and every lock must be broken. The repository contains the game and its levels, where mirrors, boxes, and carefully placed targets make each challenge a new part of the adventure.
+This is a Python puzzle game that turns a midnight vault heist into a test of aim and ingenuity. Guided by King, you’re sent into the vault with a simple warning: every run gets one shot, and every lock must be broken. The repository contains the game and its levels, where mirrors, boxes, and carefully placed targets make each challenge a new part of the adventure.
 
 ## Run Instructions
 > python main.py
