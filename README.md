@@ -92,7 +92,7 @@ One-off engine checks were run with Python 3.14.10; all 15 assertions passed. Th
 - README Documentation - Xinhao Chen, Chanyeong Park
 - Code Comments & Technical Documentation - Jiacheng Liang, Chanyeong Park
 - Project Report / Presentation Slides - Chanyeong Park
-- Gameplay Recording / Demo Video - Xinhao Chen
+- Gameplay Recording / Demo Video - Chanyeong Park, Jiacheng Liang, Xinhao Chen
 - Video Trailer Production - Xinhao Chen
 - Video Editing & Post-Production - Xinhao Chen, Chanyeong Park
 - Final Submission Packaging - Jiacheng Liang
