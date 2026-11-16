@@ -128,7 +128,32 @@ def main(stdscr):
     start_time = time.time()
 
     while True:
-        
+        if engine.state == "WIN":
+            playtime = time.time() - start_time
+            stdscr.timeout(-1)
+            while True:
+                sync_terminal_size(stdscr)
+                max_y, max_x = stdscr.getmaxyx()
+                if max_y < VIEWPORT_HEIGHT or max_x < VIEWPORT_WIDTH:
+                    render_resize_message(stdscr)
+                else:
+                    render_win_screen(stdscr, playtime)
+
+                key = stdscr.getch()
+                if key == curses.KEY_RESIZE:
+                    sync_terminal_size(stdscr)
+                    stdscr.clear()
+                    stdscr.touchwin()
+                    continue
+                if key in (ord('q'), ord('Q'), 27):
+                    return
+                if key in (10, 13, curses.KEY_ENTER):
+                    engine.load_level(1)
+                    start_time = time.time()
+                    stdscr.timeout(5 * GAME_SPEED)
+                    break
+            continue
+
         # Render the frame, check if terminal is too small
         success = render_frame(stdscr, engine, color_pairs)
         if not success:
@@ -142,12 +167,6 @@ def main(stdscr):
             if key in (ord('q'), ord('Q'), 27):
                 break
             continue
-        if engine.state == "WIN":
-            playtime = time.time() - start_time
-            stdscr.timeout(-1)
-            render_win_screen(stdscr, playtime)
-            if key in (ord('q'), ord('Q'), 27):
-                    return
             
         if engine.state == "LOSE":
             curses.beep()
