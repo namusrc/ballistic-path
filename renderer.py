@@ -199,7 +199,6 @@ def render_win_screen(stdscr, playtime):
             ("!  You are the greatest thief  !", yellow),
             ("", plain),
             ("[Q] Quit", plain),
-            ("[Enter] Restart Game", plain),
             ("", plain),
             (f"Playtime: {playtime:.2f} seconds", plain),
         ]
