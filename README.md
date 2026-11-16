@@ -4,6 +4,8 @@
 
 This is a Python puzzle game that turns a midnight vault heist into a test of aim and ingenuity. Guided by King, you’re sent into the vault with a simple warning: every run gets one shot, and every lock must be broken. The repository contains the game and its levels, where mirrors, boxes, and carefully placed targets make each challenge a new part of the adventure.
 
+Source code available at [github](https://github.com/namusrc/ballistic-path)
+
 ## Run Instructions
 > python main.py
 
